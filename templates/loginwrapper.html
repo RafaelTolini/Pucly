@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'style/style.css' %}"/>
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <title>PUCLY</title>
+    
+</head>
+
+<body>
+<header>
+  <div class="cabeçario">
+        <div class="logo">
+            <a href="{% url 'inicial' %}"><img  id="logo-imagem1" src="{% static 'images/logo.png' %}" alt="logo site"></a>
+        </div>
+  
+  
+        <div class="login1">
+
+{% block content %}
+
+
+{% endblock content %}
+<!--Fazer os slides com as informações meio que propaganda e trocar pelas fotos da puc-->
+{%if not hide_slides%}
+<div class="content">
+    <div class="slides">
+        <!--radio buttons-->
+        <input class="input" type="radio" name="radio-btn" id="slide1" checked/>
+        <input class="input" type="radio" name="radio-btn" id="slide2"/>
+        <input class="input" type="radio" name="radio-btn" id="slide3"/>
+        <input class="input" type="radio" name="radio-btn" id="slide4"/>
+
+        <script>
+            let contador = 1;
+
+            setInterval(function(){
+                document.getElementById('slide' + contador).checked = true;
+                contador ++;
+
+                if(contador > 4){
+                    contador = 1
+                }
+
+            },3000)
+
+        </script>
+     
+
+         
+        <div class="slide s1">
+            <img src="{% static 'images/puc1p.jpg' %}" alt="image1">
+        </div>
+        
+        <div class="slide">
+            <img src="{% static 'images/puc2p.jpg' %}" alt="image2">
+        </div>
+
+        <div class="slide">
+            <img src="{% static 'images/puc3p.jpg' %}" alt="image3">
+        </div>
+
+        <div class="slide">
+            <img src="{% static 'images/puc4p.jpg' %}" alt="image4">
+        </div>
+    </div>
+</div>
+{%endif%}
+
+        <div class="navegation">
+
+            <label for="slide1" class="manual-btn"></label>
+            <label for="slide2" class="manual-btn"></label>
+            <label for="slide3" class="manual-btn"></label>
+            <label for="slide4" class="manual-btn"></label>
+        </div>  
+</div>  
+  
+  {% include 'footer.html' %}      
+
+</body>

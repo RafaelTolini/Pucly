@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'style/pucly.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/style.css' %}"/>
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <title>Página 404</title>
+    
+</head>
+
+<body>
+<header>
+  <div class="cabeçario">
+        <div class="logo">
+        <a href="{% url 'inicial' %}"><img  id="logo-imagem1" src="{% static 'images/logo.png' %}" alt="logo site"></a>
+        </div>
+        
+</header> 
+   <h1>Ops, esta página não foi encontrada</h1>
+        <p>
+          Parece que você se perdeu... Tente voltar para a página anterior ou
+          acessar a home.
+        </p>
+        <div class="button-wrapper">
+          <a href="#" class="btn">voltar</a>
+          <a href="#" class="btn">ir para a home</a>
+        </div>
+     
+</body>
+
+
+

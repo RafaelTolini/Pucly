@@ -1,0 +1,48 @@
+{% extends 'loginwrapper.html' %}
+
+{% block content %}
+<div class="userform">
+                        <form action="{% url 'login' %}" method="POST" class="form  login loginForm"  >{% csrf_token %}
+
+                            <h1 id="login-name">Login</h1>
+                        <div class="login-bar"></div>
+                        
+                            {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                <p style="color:red;font-size:13px;">{{ message }}</p>
+                                {% else %}
+                                <p style="color:green;font-size:13px;">{{ message }}</p>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            
+                            <div class="box-user">
+                                <input id="nome" type="text"  required minlength="3" name="username"/>
+                                <label class="nome-label">Username</label>
+                            </div>
+                          
+                            <br/><br>
+                            <div class="box-user">            
+                                <input id="Senha" type="password" required minlength="6" name="password"/>
+                                <label class="senha-label">Senha</label>
+                              <p id='esqueciSenha'><a href="{% url 'esqueci-senha' %}">Esqueci minha senha</a></p>
+                            </div>
+                            <br>
+                            <label class="lembredemim">
+                                <input type="checkbox" class="lembre"/>
+                               Lembre de mim
+                            </label>
+                            <br/><br>
+                            <p class= 'redirecionarConta'> Não tem uma conta? <a href="{% url 'registro' %}"> Registre-se aqui</a></p>
+                            <br/><br>
+                                    <input id="Enviar" type="submit" value="Entrar"/>
+                            
+                            <br/><br/>
+                        </form>
+
+                        
+                </div> 
+{% endblock content %}

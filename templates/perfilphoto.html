@@ -1,0 +1,233 @@
+{% load static %}
+
+<form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+<div class="profile-content">
+    <div class="holder">
+      <!-- uploaded pic shown here -->
+      <img class="pic" src="{{profile.profile_picture.url}}" alt="profile picture">
+      <input class="" type="file" name="profile_picture" accept="image/*" id="id_profile_picture" onchange="form.submit()">
+      <label for="id_profile_picture" class="upload-file-block">
+        <div class="text-center">
+          <div class="text-uppercase" style="font-family:sans-serif">
+            Alterar <br /> Foto de Perfil
+          </div>
+        </div>
+      </label>
+    </div>
+    </hr>
+    <h1 class="perfil-nome">{{usuario}}</h1>
+  </div>
+</form>
+
+
+
+
+<!-- Javascript -->
+<script>
+  document.addEventListener("change", function (event) {
+    if (event.target.classList.contains("uploadProfile")) {
+      var triggerInput = event.target;
+      var currentImg = triggerInput.closest(".holder").querySelector(".pic")
+        .src;
+      var holder = triggerInput.closest(".holder");
+      var wrapper = triggerInput.closest(".profile-content");
+
+      var alerts = wrapper.querySelectorAll('[role="alert"]');
+      alerts.forEach(function (alert) {
+        alert.remove();
+      });
+
+      triggerInput.blur();
+      var files = triggerInput.files || [];
+      if (!files.length || !window.FileReader) {
+        return;
+      }
+
+      if (/^image/.test(files[0].type)) {
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+
+        reader.onloadend = function () {
+          holder.classList.add("uploadInProgress");
+          holder.querySelector(".pic").src = this.result;
+
+          var loader = document.createElement("div");
+          loader.classList.add("upload-loader");
+          loader.innerHTML =
+            '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
+          holder.appendChild(loader);
+
+          setTimeout(function () {
+            holder.classList.remove("uploadInProgress");
+            loader.remove();
+
+            var random = Math.random();
+            if (random < 0.9) {
+              wrapper.innerHTML +=
+                '<div class="snackbar show" role="alert"><i class="fa fa-check-circle text-success"></i> Profile image updated successfully</div>';
+              triggerInput.value = "";
+              setTimeout(function () {
+                wrapper.querySelector('[role="alert"]').remove();
+              }, 3000);
+            } else {
+              holder.querySelector(".pic").src = currentImg;
+              wrapper.innerHTML +=
+                '<div class="snackbar show" role="alert"><i class="fa fa-times-circle text-danger"></i> There is an error while uploading! Please try again later.</div>';
+              triggerInput.value = "";
+              setTimeout(function () {
+                wrapper.querySelector('[role="alert"]').remove();
+              }, 3000);
+            }
+          }, 1500);
+        };
+      } else {
+        wrapper.innerHTML +=
+          '<div class="alert alert-danger d-inline-block p-2 small" role="alert">Please choose a valid image.</div>';
+        setTimeout(function () {
+          var invalidAlert = wrapper.querySelector('[role="alert"]');
+          if (invalidAlert) {
+            invalidAlert.remove();
+          }
+        }, 3000);
+      }
+    }
+  });
+
+
+
+</script>
+
+<!-- CSS -->
+
+<style>
+  .profile-content {
+    height: 30vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .holder {
+    text-align: center;
+    position: relative;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .holder .pic {
+    height: 100%;
+    width: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center;
+    object-position: center;
+  }
+
+  .holder .upload-file-block,
+  .holder .upload-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(90, 92, 105, 0.7);
+    color: #f8f9fc;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .holder .upload-file-block {
+    cursor: pointer;
+  }
+
+  .holder:hover .upload-file-block,
+  .uploadProfile:focus ~ .upload-file-block {
+    opacity: 1;
+  }
+
+  .holder.uploadInProgress .upload-file-block {
+    display: none;
+  }
+
+  .holder.uploadInProgress .upload-loader {
+    opacity: 1;
+  }
+  .snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 14px;
+    transform: translateX(-50%);
+  }
+
+  .snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  @-webkit-keyframes fadein {
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+    to {
+      bottom: 30px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadein {
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+    to {
+      bottom: 30px;
+      opacity: 1;
+    }
+  }
+
+  @-webkit-keyframes fadeout {
+    from {
+      bottom: 30px;
+      opacity: 1;
+    }
+    to {
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeout {
+    from {
+      bottom: 30px;
+      opacity: 1;
+    }
+    to {
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+  
+</style>

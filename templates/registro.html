@@ -1,0 +1,74 @@
+{% extends 'loginwrapper.html' %}
+
+{% block content %}
+<div class="userform">
+        <form action="{% url 'registro' %}" method="POST"class="form  signup signupForm"  >{% csrf_token %}
+            
+            <h1 id="login-name">Registre-se</h1>
+            <div class="login-bar"></div>
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <p style="color:red;font-size:13px;">{{ message }}</p>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+          
+            <!-- TESTE -->
+            <div class="box-user">
+                <input id="id_nome" type="text" name="username" maxlength="100" required>
+                <label for="id_nome" class="nome-label">Username</label>
+            </div>
+        
+            <br/>
+
+            <div class="box-user">
+                <input id="nome" type="email"  name="email" required minlength="3" />
+                <label class="nome-label">Email</label>
+            </div>
+        
+            <br/>
+          
+            <div class="box-user">            
+                <input id="Senha" type="password"  name="password" required minlength="6" />
+                <label class="senha-label">Senha</label>
+            </div>
+          
+            <br/>
+          
+            <div class="box-user">            
+                <input id="Senha" type="password"  name ="pass2" required minlength="6" />
+                <label class="senha-label">Confirmar senha</label>
+            </div>
+          
+            <br>
+
+            <label class="lembredemim">
+                <input type="checkbox" id="concordo" onclick ="check(this)"/>
+                Concordo com todos os termos e condições
+            </label>
+            <br/>
+              <script>
+                    function check(div){
+                      document.getElementById('Enviar').disabled = true;
+                  if(div.checked == true){
+                    document.getElementById('Enviar').disabled = false;
+                    
+                  }
+                  else{
+                    document.getElementById('Enviar').disabled = true;
+                    
+                  }
+                }
+              </script>
+          
+            <p class= 'redirecionarConta'> Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+            <input id="Enviar" type="submit" value="Registrar-se"/>
+            
+            <br/><br/>
+        </form>
+
+        
+</div> 
+{% endblock content %}

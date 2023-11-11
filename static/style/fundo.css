@@ -1,0 +1,7 @@
+html
+{
+  background-image: url(../images/fundo-tela.png);
+  min-height:100%;
+  width: 100%;
+  background-color:#ffe6f4;
+}

@@ -1,0 +1,493 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <title>PUCLY</title>
+</head>
+<body>
+     <header>
+        <nav class="navbar">
+            <!--Cabeçario Fixo-->
+            <script>
+                    $(window).scroll(function(){
+                        if ($(this).scrollTop() > 1 ){
+                            $('navbar').addClass("sticky");
+                        }
+                        else{
+                            $('navbar').removeClass("sticky");
+                        }
+                    }
+                
+                </script>
+            <div class="logoimg">
+                <img  class="logo-imagem" src="{% static 'images/logo.png' %}" alt="logo site">
+            </div>
+            <span class="racingline"></span>
+            <div class="listbox">
+                <ul class="list">
+                    <li onclick="openModal()" class="listitem"><a   class="listfont">Sobre Nós</a></li>
+                    <li onclick="openPuc()" class="listitem"><a  class="listfont">PUC-Rio</a></li>
+                    <li onclick="openCont()" class="listitem"><a  class="listfont">Contato</a></li>
+                    <li class="listitem"><a href={% url 'login' %} class="listfont">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+<!--Em desenvolvimento pf cuidado com essa parte/Janela suspensa-->
+   <div id="modal-container" class="modal-container">
+        <div class="modal">
+            <button class="fechar" id="fechar">X</button>
+            <h1>Sobre Nós</h1>
+            <p>Um grupo de estudantes de Ciência da Computação criou um site de resolução de exercícios para ajudar outros estudantes. Eles desenvolveram uma plataforma que se tornou valiosa para a educação. O grupo está comprometido em expandir e melhorar continuamente o site.</p>
+          <!--Pensar num desiner e modificar para ficar de acordo com oq a gente quer colocar um circulo azul com a nossa logo  dentro e contar um pouco da historia talvez-->
+        </div>
+    </div>
+   <div id="modal-puc" class="modal-container">
+        <div class="modal">
+            <button class="fechar" id="fechar">X</button>
+            <h1>Puc-Rio</h1>
+            <p> <a id='eadpuc' href="https://ead.puc-rio.br/loginccead/">EAD PUC-Rio</a>
+        </br> </br>
+              <a id='saupuc' href="https://www.puc-rio.br/puconline/#">SAU PUC-Rio</a></p>
+        </div>
+    </div>
+   <div id="modal-cont" class="modal-container">
+        <div class="modal">
+            <button class="fechar" id="fechar">X</button>
+            <h1>Fale conosco</h1>
+              <a id='contato' href="mailto:pucly@DI.puc-rio.br">Email</a>
+        </div>
+    </div>
+    <script>
+      function openModal(){
+        const modal = document.getElementById('modal-container')
+        modal.classList.add('mostrar')
+    
+        modal.addEventListener('click', (e) =>{
+            if (e.target.id == 'modal-container' || e.target.id == "fechar"){
+                modal.classList.remove('mostrar')
+                localStorage.fechaModal = 'modal-container'
+            }
+        })
+    }
+       function openCont(){
+        const modal = document.getElementById('modal-cont')
+        modal.classList.add('mostrar')
+    
+        modal.addEventListener('click', (e) =>{
+            if (e.target.id == 'modal-cont' || e.target.id == "fechar"){
+                modal.classList.remove('mostrar')
+                localStorage.fechaModal = 'modal-cont'
+            }
+        })
+    }
+       function openPuc(){
+        const modal = document.getElementById('modal-puc')
+        modal.classList.add('mostrar')
+    
+        modal.addEventListener('click', (e) =>{
+            if (e.target.id == 'modal-puc' || e.target.id == "fechar"){
+                modal.classList.remove('mostrar')
+                localStorage.fechaModal = 'modal-puc'
+            }
+        })
+    }
+    </script>
+
+
+
+
+
+  
+    <main class="main">
+      <!--Imagem do cerebro(nosso personagem)-->
+        <img class="backdrop" src="{% static 'images/bom.png' %}" alt="mascote pucly">
+        <div class="content">
+          <div class="slides">
+              <!--radio buttons-->
+              <input class="input" type="radio" name="radio-btn" id="slide1" checked/>
+              <input class="input" type="radio" name="radio-btn" id="slide2"/>
+              <input class="input" type="radio" name="radio-btn" id="slide3"/>
+              <input class="input" type="radio" name="radio-btn" id="slide4"/>
+
+              <script>
+                  let contador = 1;
+
+                  setInterval(function(){
+                      document.getElementById('slide' + contador).checked = true;
+                      contador ++;
+
+                      if(contador > 4){
+                          contador = 1
+                      }
+
+                  },3000)
+
+              </script>
+
+
+
+              <div class="slide s1">
+                  <img src="{% static 'images/puc1p.jpg' %}" alt="image1">
+              </div>
+
+              <div class="slide">
+                  <img src="{% static 'images/puc2p.jpg' %}" alt="image2">
+              </div>
+
+              <div class="slide">
+                  <img src="{% static 'images/puc3p.jpg' %}" alt="image3">
+              </div>
+
+              <div class="slide">
+                  <img src="{% static 'images/puc4p.jpg' %}" alt="image4">
+              </div>
+          </div>
+        </div>
+
+              <div class="navegation">
+
+                  <label for="slide1" class="manual-btn"></label>
+                  <label for="slide2" class="manual-btn"></label>
+                  <label for="slide3" class="manual-btn"></label>
+                  <label for="slide4" class="manual-btn"></label>
+              </div>  
+
+      <div>
+       
+      </main>
+      <div class="maintextbox">
+            <h1 class="slogan1">"O conhecimento nos dá asas</h1>
+            <h1 class="slogan2">para superar desafios."</h1>
+      </div>
+
+      <div class="noticias">
+        <div>
+         
+        <div>
+      
+        
+      </div>
+      <div class="canal">
+           
+      </div>
+  <style>
+
+    :root {
+      --primary: #d5ddf5;
+      --secondary: #212c59;
+      --button: #6172aa;
+      --puckly: #ff80b3;
+
+    }
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+
+    }
+    
+    body{
+      font-family:Arial, Helvetica, sans-serif ;
+      margin:0%;
+      height: 100vh;
+      width: 100%;
+      transition: 1s;
+      background-image:linear-gradient(45deg, rgba(255, 128, 179, 0.7) 0%, rgba(33, 44,89,0.9)100%),url(../images/fundo.jpg);
+      background-size: 100%;
+    }
+    .main {
+        position: absolute;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        z-index: 50;
+        background: linear-gradient(45deg, rgba(255, 128, 179, 0.755) 0%, rgba(33, 44, 89,0.95) 100%),url(../images/vech.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
+
+    ::-webkit-scrollbar{
+        width:20px;
+    }
+    ::-webkit-scrollbar-track{
+        background-color: #2c2c2cdd;
+    }
+    ::-webkit-scrollbar-thumb{
+        background: linear-gradient(45deg, rgba(255, 128, 179, 0.755) 40%, rgba(97, 114, 170,0.5) 60%);
+        height: 30px;
+        border-radius: 30px;
+    }
+
+    main{
+        display: flex;
+        justify-content: right;
+        overflow-y: hidden;
+    }
+
+    .navbar {
+        display: flex;
+        align-items: center;
+        height: 110px;
+        width: 100%;
+        z-index: 100;
+        border: 2px rgba(255, 255, 255, 0) solid;
+        background-color: rgba(33, 44, 89,0.75);
+        border-radius: 0 0 25px 25px;
+        position: fixed;
+        top: 0;
+
+    }
+    .logoimg{
+        margin-left: 2%;
+        width: 70px;
+        height: 70px;
+    }
+    .logo-imagem{
+        width: 70px;
+        height: 70px;
+    }
+    .listbox {
+        position: absolute;
+        display: flex;
+        height: 120px;
+        width: 100%;
+        justify-content: end;
+        align-items: center;
+        padding: 0px 2.5%;
+        z-index: 300;
+    }
+
+    .list {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .listitem {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 50px;
+        margin: 0 10px;
+        border: 2px rgba(255, 255, 255, 0.5) solid;
+        transition: 0.25s ease-in-out;
+        cursor: pointer;
+    }
+
+
+    .listitem:hover {
+        border: 2px #ff80b3 solid;
+        font-weight: 100;
+        transition: 0.25s ease-in-out;
+        background-color:#df8b8b;
+
+    }
+
+    .listfont:hover {
+        color: white;
+        transition: 0.5s ease-in-out;
+    }
+
+    .listfont {
+        font-size: 20px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.75);
+        font-weight: 500;
+        transition: 0.5s ease-in-out;
+    }
+
+    .racingline {
+        position: relative;
+        margin: auto;
+        background-color: #ff80b3;
+    }
+    .backdropbox {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+
+    .backdrop {
+        position: absolute;
+        display: block;
+        height: 50%;
+        top: 45%;
+        left:2%;
+        z-index: 0;
+        opacity: 0.75;
+
+    }
+    .content{
+        position: absolute;
+        left: 60%;top: 60%;
+        transform:translate(-50%, -50%);
+        width: 935px; 
+        height:520px ;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 10px 10px 5px 0px #231b52;
+        background-color: #d5ddf5;
+
+    }
+    .content .slide img{
+        height: 100%;
+        width: 100%;
+
+    }
+
+    .navegation{
+        position: absolute;
+        bottom: 50px;
+        left: 830px;
+        display: flex;
+
+    }
+
+
+    .manual-btn{
+        width: 15px;
+        height: 15px;
+        border: 2px solid #ff80b3;
+        margin: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.5s ease;
+    }
+    .manual-btn:hover{
+        background-color: #6172aa;
+
+    }
+    .slides input{
+        display: none;
+    }
+
+    .slides{
+        display: flex;
+        /*depende das quantidaddes de fotos */
+        width: 400%;
+        height: 100%;
+    }
+    .slide{
+        /*divide 100% pela quantidade de imagem*/
+        width: 25%;
+        transition: 0.6s;
+    }
+    #slide1:checked ~ .s1{
+        margin-left: 0;
+    }
+    #slide2:checked ~ .s1{
+        margin-left: -25%;
+    }
+    #slide3:checked ~ .s1{
+        margin-left: -50%;
+     }
+    #slide4:checked ~ .s1{
+        margin-left: -75%;
+     }
+    .modal-container{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #1212124b;
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        display: none;
+    }
+
+    .modal{
+        width: 60%;
+        min-width:400px;
+        min-height: 200px;
+        background-color: var(--primary);
+        backdrop-filter: blur(10px);
+        padding: 50px;
+        border-radius: 10px;
+    }
+
+    .fechar{
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background-color: #b61b1b;
+        color: #fff;
+        font-weight: 700;
+        font-size: 15pt;
+        cursor: pointer;
+    }
+
+    .modal h1{
+        margin-bottom: 20px;
+        color:var(--puckly)
+    }
+
+    @keyframes animate-modal {
+        from{
+            opacity: 0;
+            transform: translate3d(0, -20px, 0);
+        }
+
+        to{
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    .modal-container.mostrar{
+        display: flex;
+    }
+
+    .mostrar .modal{
+        animation: animate-modal .3s;
+    }
+    .maintextbox {
+        position: absolute;
+        top:110%;
+        left: 0%;
+        display: inline-block;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width:100%;
+        z-index: 10;
+    }
+
+    .slogan1 {
+        position: relative;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        font-size: 92px;
+        color: #fff;
+        padding: 0 0 0 25px;
+    }
+
+    .slogan2 {
+        position: absolute;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        font-size: 92px;
+       color: #212c59;
+        padding: 0 0 0 70px;
+    }
+    .canal{
+      position: relative;
+      top:500px;
+      margin-left:20px;
+    }
+    
+  </style>
+</body>

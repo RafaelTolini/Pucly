@@ -1,0 +1,205 @@
+<!-- TITULO E DESCRIÇÃO -->
+{% load static %}
+{% load timesince_pt %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'style/style.css' %}"/>
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <title>PUCLY</title>
+    {{ form.media }}  
+</head>
+
+  
+<body>
+  {%include 'navbar.html'%}
+  
+  <div class="page-container">
+  <div class="caixa_forum">
+  <div id='duvidas'>
+
+    <div style="display:flex;align-items: center">
+
+    {%if not forum.anonimo%}
+    <a href="{%url 'profile' forum.host.id%}">
+    <img  class="forum-imagem" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
+    </a>
+      
+    <div style="margin-left:15px;">
+    <a href="{%url 'profile' forum.host.id%}" style="text-decoration:none;"><h1 class="forum-host">{{forum.host}}</h1></a>
+    {%else%}
+    <img  class="forum-imagem" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
+      
+    <div style="margin-left:15px;">
+    <h1 class="forum-host">Anônimo</h1>
+    {%endif%}
+      
+    {% for tag in tags %}
+    <small style="color:#ff80b3;">{{tag}}</small>
+    {% endfor %}
+    <small style="color:#fff;">  |  </small>
+    <small style="color:#ff80b3;">há {{forum.created|timesince_pt}}</small>
+    </div>
+      
+    </div>
+    
+
+    <h1 class='duvida' style="font-size: 50px;">{{forum.title}}</h1>
+    
+    
+    <div style="color:#fff">
+    <p class='descDúvida' style="font-size: 40px;">{{forum.text.html|safe}}</p>
+    </div>
+      
+    <a href="{% url 'resposta' forum.id %}" style="text-decoration:none;">
+    <button class='bntCriarResposta'>
+    <strong>
+    <span style="color:#000;font-size: 25px;vertical-align: middle;margin-right: 5px;">+ </span> 
+    Responder
+    </strong>
+    </button>
+    </a>
+      
+    <hr>
+  </div>
+  
+  <!-- RESPOSTAS -->
+  <div>
+    {% for answer in answers %}
+    <div class='respostas'>
+    <a class='nomePerfil' href="{%url 'profile' answer.sender.id%}"><h3 style="font-size: 30px;">@{{answer.sender}}</h3></a>
+    <small>há {{answer.created|timesince_pt}}</small>
+    {%if not forum.melhor_resposta and request.user == forum.host%}
+    <a href="{%url 'melhor-resposta' forum.id answer.id%}"><small>Melhor Resposta</small></a>
+    {%endif%}
+    {%if answer.melhor_resposta%}
+    <small style="color:#ff80b3">Melhor Resposta!</small>
+    {%endif%}
+    <p style="font-size: 20px;">{{answer.text.html|safe}}</p>
+    <hr>
+    </div>
+  </br>
+    {% endfor %}
+  </div>
+  <!-- Ainda fazer: Limitar qnt de respostas, não permitir marcar própria resposta como melhor, dar pontos por melhor resposta -->
+
+  </div>
+  
+  {% include 'footer.html' %}
+  </div>
+</body>
+  
+<!-- header fixo e rolagem-->
+<!--
+  <script>
+
+      $(window).scroll (function(){
+          if ($(this).scrollTop() > 1 ){
+              $('header').addClass("sticky");
+          }
+          else{
+              $('header').removeClass("sticky");
+          }
+      }
+  
+  </script>
+-->
+
+<style>
+
+body{
+  background: #fff5ff;
+  margin-top:8%;
+}
+
+.page-container{
+  margin-left:0;
+}
+* {box-sizing: content-box;}
+
+.duvida{
+  color:#ff80b3;
+  margin-bottom:0;
+}
+.descDúvida{
+  font-family:sans-serif;
+  color:#fff;
+}
+  
+.respostas{
+  padding: 2%;
+  border-radius: 15px;
+  background-color: #fff;
+}
+
+.novaResposta{
+  border-radius: 25px;
+  font-size: 15px;
+  color: black;
+  height:50px;
+  width: 400px;
+}
+
+.nomePerfil{
+  font-family:sans-serif;
+  color: #212c59;
+  text-decoration:none;
+}
+
+.caixa_forum{
+    /* margin-top: 5rem; */
+    background-color: #272c52E8; /*cor caixa de login*/
+    padding: 45px;
+    padding-top: 45px;
+    border-radius:15px;
+    width: 1100px;
+    position: absolute;
+    top: 170px; left: 50%;
+    transform: translate(-50%,0%);
+    box-shadow:0 0 15px  #231b52;
+}
+
+.bntCriarResposta{
+  /* border-radius:5px;
+  background-color: #FFB6C1;
+  border:none; */
+  display: flex;
+  align-items: center;
+  width: 165px;
+  padding: 5px 20px;
+  font-size: 16px;
+  border: 0px solid #deebff;
+  border-radius: 50px;
+  font-family:sans-serif; 
+  background-color: #ff80b3;
+  text-align:center;
+  box-sizing: border-box;
+  margin-top:35px;
+  margin-bottom:10px;
+}
+
+.bntCriarResposta:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+
+.forum-imagem{
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50px;  
+    border: 4px solid #4e5880;
+}
+  
+.forum-host{
+  color: white;
+  font-size: 20px;
+  font-family: sans-serif;
+  margin:0;
+  margin-bottom:3px;
+  margin-top:7px;
+}
+  
+</style>

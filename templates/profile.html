@@ -1,0 +1,289 @@
+<!-- PÁGINA DE PERFIL USUÁRIOS -->
+{% load static %}
+{% load timesince_pt %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <link rel="stylesheet" href="{% static 'style/fundo.css' %}"/>
+</head>
+
+<body style="margin-top:8%;margin-left:0;">
+<main class="main">
+  
+{%include 'navbar.html'%}
+
+<div style="margin-top:07%;margin-left:0;">
+  
+
+  {%include 'perfilphoto.html'%}
+  
+<div class="container">
+
+  <div></div>
+  
+  <div class='caixas'>
+    <h1 class='titulo'>Respostas</h1>
+    <hr class="title_hr">
+    {% for answer in answers %}
+    <div class='answer'>
+    <p style="margin-top:15px">{{answer|truncatechars:37}}</p>
+    <p style="margin-top:8px;font-size:12px;">em <span class="nomePerfil"><strong>
+    <a href="{% url 'forum' answer.forum.id %}" class="nomePerfil">{{answer.forum|truncatechars:45}}</a>
+    </strong></span></p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class='caixas'>
+    <h1 class='titulo'>Dúvidas</h1>
+    <hr class="title_hr">
+    {% for forum in forums %}
+
+    {%if not forum.anonimo%} 
+    <div class='duvidas'>
+    <div style="display:flex;align-items: center;">
+    <img  class="forum-imagem" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
+    <strong><span class='nomeForum'>{{forum.host}}</span></strong>
+    </div>
+    <a href="{% url 'forum' forum.id %}"><h3 style="margin-top:10px;">{{forum.title}}</h3></a>
+    <p>{{forum.text.html|safe|truncatechars:250}}</p>
+    {% for tag in forum.tags.all %}
+    <small style="color:#ff80b3">{{tag}}</small>
+    <small>  |  </small>
+    {% endfor %}
+    <small style="color:#fff">há {{forum.created|timesince_pt}}</small>
+    <small>  |  </small>
+    {% if request.user == forum.host %}
+    <a href="{% url 'editar-forum' forum.id %}"><button class='bntEditar'>Editar</button></a>
+    <small>  |  </small>
+    <a href="{% url 'deletar-forum' forum.id %}"><button class='bntDeletar'>Deletar</button></a>
+    {% endif %}
+    <hr class="duvida_hr">
+    </div>
+    </br>
+    
+    {%elif request.user == forum.host%}
+    
+    <div class='duvidas'>
+    <div style="display:flex;align-items: center;">
+    <img  class="forum-imagem" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
+    <strong><span class='nomeForum'>Anônimo</span></strong>
+    </div>
+    <a href="{% url 'forum' forum.id %}"><h3 style="margin-top:10px;">{{forum.title}}</h3></a>
+    <p>{{forum.text.html|safe|truncatechars:250}}</p>
+    {% for tag in forum.tags.all %}
+    <small style="color:#ff80b3">{{tag}}</small>
+    <small>  |  </small>
+    {% endfor %}
+    <small style="color:#fff">há {{forum.created|timesince_pt}}</small>
+    <small>  |  </small>
+    <a href="{% url 'editar-forum' forum.id %}"><button class='bntEditar'>Editar</button></a>
+    <small>  |  </small>
+    <a href="{% url 'deletar-forum' forum.id %}"><button class='bntDeletar'>Deletar</button></a>
+    <hr class="duvida_hr">
+    </div>
+    </br>
+    
+    {%endif%}
+    
+    {% endfor %}
+  </div>
+
+  <div class='caixas'>
+    <h1 class='titulo'>Estatísticas</h1>
+    <hr class="title_hr">
+    <p class="stats"><strong>{{usuario}} tem <span class="stats_numbers">{{profile.pontos}}</span> pontos</strong></p>
+    <p class="stats"><strong>Respondeu à <span class="stats_numbers">{{usuario.answer_set.count}}</span> dúvidas</strong></p>
+    <p class="stats"><strong>Criou <span class="stats_numbers">{{usuario.forumpost_set.count}}</span> dúvidas</strong></p>
+    <p class="stats"><strong>Tem <span class="stats_numbers">{{melhores}}</span> respostas marcadas como "melhor resposta"</strong></p>
+  </div>
+
+  <div></div>
+  
+</div>
+</div>
+
+{% include 'footer.html' %}
+</main>
+</body>
+
+<style>
+
+body{
+  /* background: #fff5ff; */
+}
+  
+small{
+  color:black;
+}
+  
+a{
+  text-decoration:none;
+  color:white;
+}
+.container {
+    display: grid;
+    grid-template-columns: 0.4fr 1fr 2.5fr 1fr 0.4fr;
+  }
+  
+.main{
+  /* position: absolute; */
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 50;
+  /* background: #fff5ff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; */
+
+}
+
+.usuario{
+  background-color: #212c59;
+  color: white;
+  height:100px;
+  width:100%;
+}
+
+.caixas{
+  margin: 1%;
+  padding:1%;
+  margin-top: 2.7px;
+  padding-top:2.7px;
+  background-color:	#eddfed;
+  border-radius: 15px;
+}
+
+.answer{
+  font-family:sans-serif;
+  border-radius: 15px;
+  background-color:#272c52E8;
+  padding: 3%;
+  margin-bottom:10px;
+  box-shadow:0 0 5px  #231b52;
+  color:white;
+}
+
+.titulo{
+  font-family:sans-serif;
+  font-familyfont: size 30px;  
+  font-size:30px;
+  text-align:center;
+}
+
+.nome_perfil_text{
+  background-color: #212c59;
+  color: white;
+  font-size: 35px;
+  font-family: sans-serif;
+  margin:0%;
+  padding-top:1.5%;
+  text-align:center;
+}
+
+.duvidas{
+  font-family:sans-serif;
+  padding: 3%;
+  padding-top: 2%;
+  border-radius: 15px;
+  background-color: #272c52E8;
+  box-shadow:0 0 15px  #231b52;
+  color:white;
+  text-decoration:none;
+}
+
+.nomePerfil{
+  font-family:sans-serif;
+  color:#ff80b3;
+}
+
+.stats{
+  font-family:sans-serif;
+  color:#212c59;
+  font-size:25px;
+  text-align:center;
+}
+
+.stats_numbers{
+  font-family:sans-serif;
+  color:#000000;
+}
+
+.duvida_hr{
+  background-color: #212c59;
+  border: none;
+  height: 2px;
+}
+
+.title_hr{
+  background-color: white;
+  border: none;
+  height: 5px;
+}
+
+.bntEditar{
+  border-radius:15px;
+  background-color: #ff80b3;
+  border:none;
+  color:black;
+  font-family:sans-serif;
+  font-weight:700;
+}
+.bntEditar:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+
+.bntDeletar{
+  border-radius:15px;
+  background-color: #ff80b3;
+  border:none;
+  color:black;
+  font-family:sans-serif;
+  font-weight:700;
+}
+.bntDeletar:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+
+.forum-imagem{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50px;  
+    border: 4px solid #4e5880;
+}
+
+.nomeForum{
+  font-family:sans-serif;
+  color:#ff80b3;
+  margin-left: 10px;
+  font-size:17px;
+}
+
+.perfil-imagem{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50px;  
+    border: 0px solid #4e5880;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.perfil-nome{
+    text-align:center;
+    font-family:sans-serif;
+    color:#0e1840;
+}
+
+
+  
+</style>
+

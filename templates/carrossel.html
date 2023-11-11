@@ -1,0 +1,160 @@
+{% load index %}
+{% load range %}
+
+<div class="carrossel">
+    <div class="wrapper">
+      <section id="section1">
+        <a href=""><</a>
+          {% with lista=5|range:15 %}
+          {% for i in lista %}
+          <div class="carousel-item">
+
+            <a href="" style="text-decoration: none">
+              <div class="carousel-content">
+                <h3>{{ i }}</h3>
+              </div>
+            </a>
+
+          </div>
+          {% endfor %}
+        <a href="#section2">></a>
+        </section>
+    </div>
+  </div>
+
+
+<style>
+
+
+  :root {
+    --primary: #d5ddf5;
+    --secondary: #212c59;
+    --button: #6172aa;
+    --puckly: #ff80b3;
+
+  }
+  /* * {box-sizing: border-box;} */
+
+  .wrapper {
+  display: grid;
+  background-color:var(--secondary); 
+  grid-template-columns: repeat(3, 100%);
+  overflow: hidden;
+  scroll-behavior: smooth;
+
+  }
+
+  .wrapper section {
+   width: 100%;
+   position: relative;
+   display:grid;
+   grid-template-columns: repeat(5, auto);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+   margin:3px;
+  }
+
+  .carousel-item {
+    background-color: var(--puckly); 
+    color: #000; 
+    border-radius: 10px;
+    padding-left:25px;
+    padding-right:25px;
+    margin:3px;
+    text-align: center;
+    font-family:sans-serif;
+   }
+
+  .carrossel a {
+    text-decoration: none;
+    color: #000; 
+    background-color:var(--button);
+    /* background-image:url(); */
+    width:50px;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

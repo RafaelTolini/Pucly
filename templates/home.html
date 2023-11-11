@@ -1,0 +1,355 @@
+{% load static %}
+{% load timesince_pt %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+</head>
+
+{% include 'navbar.html' %} 
+  
+<div class="teste">
+  <div>
+    <a href="{% url 'home' %}" style="text-decoration: none">
+    <h4 style="color:#212c59;font-size: 17px;font-family:sans-serif;">
+    <strong>Todos</strong></h4>
+    </a>
+  </div>
+
+  {%include  'carrossel-teste.html' %}
+    
+<div class="container">
+<div></div>
+<div>
+
+    
+  {% for forum in forums %}
+  <div class='caixaDuvida'>
+    <div style="display:flex;align-items: center;">
+    {%if not forum.anonimo%}
+    <a href="{%url 'profile' forum.host.id%}">
+    <img  class="forum-imagem" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
+    </a>
+    <a class='linkPerfil' href="{% url 'profile' forum.host.id %}"><strong><span class='nomePerfil'>{{forum.host}}</span></strong></a>
+    {%else%}
+    <img  class="forum-imagem" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
+    <strong><span style="margin-left: 10px;font-family:sans-serif;color:#ff80b3;">Anônimo</span></strong>
+    {%endif%}
+    </div>
+    <div style="display:flex;align-items: center;justify-content: space-between;">
+    <a class='linkTextoDuvida' href="{% url 'forum' forum.id %}"><h3 class="textoDuvida">{{forum.title}}</h3></a>
+    {%ifnotequal request.user forum.host%}
+    <a href="{% url 'resposta' forum.id %}" style="text-decoration:none;">
+    <button class='bntCriarResposta'>
+    <strong>
+    Responder
+    </strong>
+    </button>
+    </a>
+    {%endifnotequal%}
+    </div>
+    <div style="color: white;font-family:sans-serif;">
+    <p class="duvidaDescricao">{{forum.text.plain|safe|truncatechars:250}}</p>
+    </div>
+    {% for tag in forum.tags.all %}
+    <a href="{%url 'home'%}?q={{tag}}" class="link"><small style="color:#ff80b3;font-family:sans-serif;">{{tag}}</small></a>
+    <small>  |  </small>
+    {% endfor %}
+    <small class='time'>há {{forum.created|timesince_pt}}</small>
+    <small>  |  </small>
+    {% if request.user == forum.host %}
+    <a href="{% url 'editar-forum' forum.id %}"><button class='bntEditar'>Editar</button></a>
+    <small>  |  </small>
+    <a href="{% url 'deletar-forum' forum.id %}"><button class='bntDeletar'>Deletar</button></a>
+    {% endif %}
+    <hr>
+  </div>
+    </br>
+  {% endfor %}
+  </div>
+  
+  <div style="padding-left:50px;">
+  <div style="border: 3px solid #ff80b3;border-radius:15px;padding:20px;background-color:#272c52E8;box-shadow:0 0 15px  #231b52;">
+  <div style="display:flex;align-items: center;justify-content: center;">
+  <img  class="brain-image" src="{% static 'images/brain.png' %}" alt="brain picture">
+  <h1 style="font-family:sans-serif;text-align:center;color:#fff2ff">Ranking</h1>
+  </div>
+  <hr style="background-color:#ff80b3">
+  <div style="margin-left:65px;margin-right:70px;margin-top:30px">
+  {%for profile in profiles%}
+  {%if profile.verified%}
+  <div style="display:flex;margin-top:10px;align-items: center;justify-content: space-between;">
+
+  <div style="display:flex;align-items: center;">
+
+  {%if forloop.counter == 1%}
+  <img  class="medal-imagem" src="{% static 'images/gold.png' %}" alt="medal">
+  {%elif forloop.counter == 2%}
+  <img  class="medal-imagem" src="{% static 'images/silver.png' %}" alt="medal">
+  {%elif forloop.counter == 3%}
+  <img  class="medal-imagem" src="{% static 'images/bronze.png' %}" alt="medal">
+  {%endif%}
+    
+  <a href="{%url 'profile' profile.user.id%}">
+  <img  class="ranking-imagem" src="{{profile.profile_picture.url}}" alt="profile picture">
+  </a>
+
+  <strong>
+  <a href="{%url 'profile' profile.user.id%}" class="link">
+  <div style="font-family:sans-serif;text-align:left;flex: 1;color:#fff2ff">
+    {{profile.user}}
+  </div>
+  </a>
+  </div>
+
+  <div style="font-family:sans-serif;text-align:right;flex: 1;color:#fff2ff">
+    {{profile.pontos}} pts
+  </div>
+  </strong>
+    
+  </div>
+  {%endif%}
+  {% endfor %}
+  </div>
+  </div>
+  </div>
+
+  <div></div>
+  
+</div>
+
+{% include 'footer.html' %} 
+</div>
+
+<style>
+:root {
+--primary: #d5ddf5;
+--secondary: #212c59;
+--button: #6172aa;
+--puckly: #ff80b3;
+
+}
+
+html
+{
+  background-image: url("{% static 'images/fundo-tela.png' %}");
+  min-height:100%;
+  width: 100%;
+  background-color:#ffe6f4;
+}
+  
+body{
+  margin-top:08%;
+  margin-left:0%;
+  margin-right:0%;
+}
+  
+hr{
+  background-color: #212c59;
+  border: none;
+  height: 2px;
+}
+
+.teste{
+  margin:2%; 
+}
+
+.seuPerfil{
+  font-family:sans-serif;
+  color:#FFB6C1;
+  text-decoration:none;
+}
+
+.seuPerfil:hover{
+  color: #C71585;
+  cursor: pointer;
+}
+
+.titulo{
+  background-color: #212c59;
+  color: white;
+  font-size: 35px;
+  font-family: sans-serif;
+  margin:0%;
+  padding-top:1.5%;
+  padding-left:40%;
+}
+  
+.caixaDuvida{
+  padding: 3%;
+  border-radius: 15px;
+  /* background-color:#F5F5F5; */
+  background-color: #272c52E8;
+  box-shadow:0 0 15px  #231b52;
+}
+
+.linkPerfil{
+  text-decoration:none;
+  margin-left: 10px;
+  font-size:17px;
+}
+  
+.nomePerfil{
+  font-family:sans-serif;
+  color:#ff80b3;
+  
+}
+
+.nomePerfil:hover{
+  color: #C71585;
+  cursor: pointer;
+}
+
+.linkTextoDuvida{
+  text-decoration:none;
+}
+
+.textoDuvida{
+  font-family:sans-serif;
+  color:white;
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+.textoDuvida:hover{
+  color: #212c59;
+  cursor: pointer;
+  font-size:120%;
+}
+
+.duvidaDescricao{
+  font-family:sans-serif;
+  color: white;
+  
+}
+
+.time{
+  font-family:sans-serif;
+  color: white;
+}
+
+.bntEditar{
+  border-radius:15px;
+  background-color: #ff80b3;
+  border:none;
+  color:black;
+  font-family:sans-serif;
+  font-weight:700;
+}
+.bntEditar:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+
+.bntDeletar{
+  border-radius:15px;
+  background-color: #ff80b3;
+  border:none;
+  color:black;
+  font-family:sans-serif;
+  font-weight:700;
+}
+.bntDeletar:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+  
+.bntCriarDuvida{
+  /* border-radius:5px;
+  background-color: #FFB6C1;
+  border:none; */
+  display: flex;
+  align-items: center;
+  width: 170px;
+  padding: 5px 20px;
+  font-size: 16px;
+  border: 0px solid #deebff;
+  border-radius: 50px;
+  font-family:sans-serif; 
+  background-color: #ff80b3;
+  text-align:center;
+}
+
+.bntCriarDuvida:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+
+.bntCriarResposta{
+  /* border-radius:5px;
+  background-color: #FFB6C1;
+  border:none; */
+  display: flex;
+  align-items: center;
+  width: 130px;
+  padding: 8px 20px;
+  font-size: 16px;
+  border: 0px solid #deebff;
+  border-radius: 50px;
+  font-family:sans-serif; 
+  background-color: #ff80b3;
+  text-align:center;
+  float:right;
+}
+
+.bntCriarResposta:hover {
+   background-color: #FFB6C1;
+    cursor: pointer;
+}
+  
+.container {
+    margin-top:50px;
+    display: grid;
+    grid-template-columns: 1fr 5fr 2.5fr 1fr;
+    align-self: center;
+    justify-self: center;
+  }
+
+.caixaTitulo{
+    border: none;
+    border-radius: 5px;
+  }
+.ranking-imagem{
+    width:42px; 
+    height:42px;
+    object-fit: cover;
+    border-radius: 50px;  
+    border: 4.5px solid #4e5880;
+    margin-right:20px;
+}
+.forum-imagem{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50px;  
+    border: 4px solid #4e5880;
+}
+
+.brain-image{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right:10px;
+}
+
+.medal-imagem{
+    width:35px; 
+    height:35px;
+    object-fit: cover;
+    margin-left:-60px;
+    margin-right:25px;
+}
+
+.link {
+  text-decoration: none;
+  color: #000;
+}
+.link:hover {
+  text-decoration: underline;
+}
+  
+</style>
+
+ 

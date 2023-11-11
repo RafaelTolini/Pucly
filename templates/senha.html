@@ -1,0 +1,35 @@
+{% extends 'loginwrapper.html' %}
+
+{% block content %}
+<div class="userform">
+                        <form action="{% url 'esqueci-senha' %}" method="POST" class="form  login loginForm"  >{% csrf_token %}
+
+                            <h1 id="login-name">Recuperar Senha</h1>
+                        <div class="login-bar"></div>
+                        
+                            {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+                                <p style="color:red;font-size:13px;">{{ message }}</p>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            
+                            <div class="box-user">
+                                <input id="nome" type="text"  required minlength="3" name="username"/>
+                                <label class="nome-label">Email</label>
+                            </div>                      
+                          
+                            <br>
+                        
+                            <br/><br>
+                            <p class= 'redirecionarConta'> Perdeu acesso ao email? <a href="{% url 'registro' %}"> Entre em contato conosco.</a></p>
+                            <br/><br>
+                                    <input id="Enviar" type="submit" value="Enviar"/>
+                            
+                            <br/><br/>
+                        </form>
+
+                        
+                </div> 
+{% endblock content %}

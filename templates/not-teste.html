@@ -1,0 +1,9 @@
+{%for notification in notifications%}
+
+<div style="margin-top:50px;">
+<a href="{%url 'forum' notification.forum.id%}">
+<h3 style="text-align:center;font-family:sans-serif;">{{notification.sender}} {{notification.text}} "{{notification.forum}}"</h3>
+</a>
+</div>
+  
+{%endfor%}
