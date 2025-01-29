@@ -1,0 +1,22 @@
+.reset-m{
+  margin:0;
+}
+.reset-m-b{
+  margin-bottom:0;
+}
+.reset-m-t{
+  margin-top:0;
+}
+.reset-m-r{
+  margin-right:0;
+}
+.reset-m-l{
+  margin-left:0;
+}
+
+
+
+/* border */
+.reset-b{
+ border: 0px solid #000; 
+}

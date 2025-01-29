@@ -1,0 +1,82 @@
+/* general styles */
+.pink-main-button{
+  border-radius: 50px;
+  transition: 0.25s ease-in-out;
+  cursor: pointer;  
+  background-color: #272c52E8;
+  color:#ff80b3;
+  font-family:sans-serif;
+  text-decoration:none;
+  display: flex;
+  align-items: center;
+  text-align:center;
+}
+.pink-main-button:hover {
+  color:white;
+  cursor: pointer;
+}
+
+.pink-white-button{
+  text-decoration:none;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  font-family:sans-serif; 
+  text-align:center;
+  border: 2px #ff80b3 solid;
+  transition: 0.25s ease-in-out;
+  cursor: pointer;  
+  color:#ff80b3; 
+}
+.pink-white-button:hover {
+  color:white;
+  cursor: pointer;
+  background-color:#ff80b3;
+}
+
+
+
+/* page styles */
+.duvida-answer-button{
+  width: 165px;
+  padding: 5px 20px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-top:35px;
+  margin-bottom:10px;
+  border: 2px #ff80b3 solid;
+}
+.edit-delete-button{
+  margin-left:5px;
+  font-weight:700;
+  border: 1px #ff80b3 solid;
+  float:right;
+}
+.home-answer-button{
+  width: 130px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  border: 2px #ff80b3 solid;
+  float:right;
+}
+#melhor-resposta{
+  text-decoration:none;
+  display: flex;
+  align-items: center;
+  margin-left:350px;
+  width: 145px;
+  padding: 5px 20px;
+  border-radius: 50px;
+  font-family:sans-serif; 
+  text-align:center;
+  box-sizing: border-box;
+  border: 2px #ff80b3 solid;
+  transition: 0.25s ease-in-out;
+  cursor: pointer;  
+  color:#ff80b3;
+}
+#melhor-resposta:hover {
+   color:white;
+  cursor: pointer;
+  background-color:#ff80b3;
+}

@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = "a"
 
 if SECRET_KEY is None:
     print(
@@ -34,9 +34,16 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = '*'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,12 +77,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'base.context_processors.navbar_context',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
+
+ASGI_APPLICATION = 'django_project.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -128,9 +138,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/images/uploaded/'
 
-STATICFILES_DIRS = [
-  BASE_DIR / 'static'
-]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_ROOT = BASE_DIR / 'static/images/uploaded'
 

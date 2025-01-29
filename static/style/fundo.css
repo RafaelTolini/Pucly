@@ -1,7 +1,124 @@
+/* background */
 html
 {
   background-image: url(../images/fundo-tela.png);
   min-height:100%;
   width: 100%;
-  background-color:#ffe6f4;
+  font-size:16px;
+  /* background-color:#ffe6f4; */ 
+}
+
+
+
+/* body */
+.default-body{
+  font-size:1rem;
+  margin:0;
+  font-family:sans-serif;
+}
+.home-body{
+  margin-top:08%;
+}
+
+
+
+/* hrs */
+.better-hr{
+  border: none;
+  height: 2px;
+}
+.caixa-duvida-hr{
+  background-color: #212c59;
+}
+.ranking-hr{
+  background-color: #ff80b3;
+}
+.answer-hr{
+  background-color: #b4bccc;
+}
+
+
+
+/* page containers */
+.home-container {
+  margin:2%;
+  margin-top:30px;
+  display: grid;
+  grid-template-columns: 1fr 5fr 3fr 1fr;
+  align-self: center;
+  justify-self: center;
+}
+.duvida-container{
+  display: grid;
+  margin-left:0;
+  grid-template-columns: 1fr 3.5fr 1fr;
+}
+
+
+
+/* caixas */
+.caixa-azul{
+  background-color: #272c52E8;
+  box-shadow:0 0 15px  #231b52;
+  border-radius: 15px;
+}
+.caixa-duvida-home{
+  padding: 3%;
+}
+.caixa-ranking{
+  border: 3px solid #ff80b3;
+  padding:20px;
+}
+.caixa-resposta{
+  padding: 45px;
+  background-color: #eaf1f6;
+  border: 6px #8994ab solid;
+  margin-bottom:40px;
+  box-shadow:0 0 7px  #231b52;
+  line-height:24px;
+}
+.caixa-duvida{
+  margin-top: 9.5rem;
+  padding: 45px;
+  padding-top: 45px;
+  padding-bottom:10px;
+}
+
+
+
+/* display */
+.justify-space{
+  justify-content: space-between;
+}
+.justify-center{
+  justify-content: center;
+}
+.flex-align{
+  display:flex;
+  align-items: center;
+}
+.vertical-align-middle{
+  vertical-align:middle;
+}
+
+
+
+/* dimensions */
+.max-width{
+  width:100%;
+}
+
+
+
+/* input styles */
+.input-comment > input{
+  padding: 10px;
+  background-color:#f2f5fa;
+  border-radius:20px;
+}
+.input-comment{
+  margin-top:15px;
+}
+.input-comment > input:hover{
+background-color: #e9ecf2;
 }

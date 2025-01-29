@@ -1,12 +1,9 @@
-{% load static %}
-
-<form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
 <div class="profile-content">
     <div class="holder">
       <!-- uploaded pic shown here -->
-      <img class="pic" src="{{profile.profile_picture.url}}" alt="profile picture">
-      <input class="" type="file" name="profile_picture" accept="image/*" id="id_profile_picture" onchange="form.submit()">
-      <label for="id_profile_picture" class="upload-file-block">
+      <img class="pic" src="{{request.user.profile.profile_picture.url}}" alt="profile picture">
+      <input class="uploadProfile" type="file" name="profile_picture" id="newProfilePhoto" accept="image/*" style="opacity: 0;" />
+      <label for="newProfilePhoto" class="upload-file-block">
         <div class="text-center">
           <div class="text-uppercase" style="font-family:sans-serif">
             Alterar <br /> Foto de Perfil
@@ -17,7 +14,6 @@
     </hr>
     <h1 class="perfil-nome">{{usuario}}</h1>
   </div>
-</form>
 
 
 
@@ -31,12 +27,7 @@
         .src;
       var holder = triggerInput.closest(".holder");
       var wrapper = triggerInput.closest(".profile-content");
-
-      var alerts = wrapper.querySelectorAll('[role="alert"]');
-      alerts.forEach(function (alert) {
-        alert.remove();
-      });
-
+      
       triggerInput.blur();
       var files = triggerInput.files || [];
       if (!files.length || !window.FileReader) {
@@ -50,48 +41,8 @@
         reader.onloadend = function () {
           holder.classList.add("uploadInProgress");
           holder.querySelector(".pic").src = this.result;
-
-          var loader = document.createElement("div");
-          loader.classList.add("upload-loader");
-          loader.innerHTML =
-            '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
-          holder.appendChild(loader);
-
-          setTimeout(function () {
-            holder.classList.remove("uploadInProgress");
-            loader.remove();
-
-            var random = Math.random();
-            if (random < 0.9) {
-              wrapper.innerHTML +=
-                '<div class="snackbar show" role="alert"><i class="fa fa-check-circle text-success"></i> Profile image updated successfully</div>';
-              triggerInput.value = "";
-              setTimeout(function () {
-                wrapper.querySelector('[role="alert"]').remove();
-              }, 3000);
-            } else {
-              holder.querySelector(".pic").src = currentImg;
-              wrapper.innerHTML +=
-                '<div class="snackbar show" role="alert"><i class="fa fa-times-circle text-danger"></i> There is an error while uploading! Please try again later.</div>';
-              triggerInput.value = "";
-              setTimeout(function () {
-                wrapper.querySelector('[role="alert"]').remove();
-              }, 3000);
-            }
-          }, 1500);
-        };
-      } else {
-        wrapper.innerHTML +=
-          '<div class="alert alert-danger d-inline-block p-2 small" role="alert">Please choose a valid image.</div>';
-        setTimeout(function () {
-          var invalidAlert = wrapper.querySelector('[role="alert"]');
-          if (invalidAlert) {
-            invalidAlert.remove();
-          }
-        }, 3000);
-      }
     }
-  });
+  }}});
 
 
 
@@ -101,7 +52,7 @@
 
 <style>
   .profile-content {
-    height: 30vh;
+    height: 50vh;
     width: 100%;
     position: relative;
     display: flex;
@@ -119,6 +70,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 20px;
   }
 
   .holder .pic {

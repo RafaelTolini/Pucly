@@ -19,6 +19,7 @@ urlpatterns = [
     path('forum-creation', views.forumCreation, name='forum-creation'),
     path('deletar-forum/<str:pk>', views.deletarForum, name='deletar-forum'),
     path('editar-forum/<str:pk>', views.editarForum, name='editar-forum'),
+    path('answer-comments/<str:pk>', views.answer_comments, name='answer-comments'),
 
     path('resposta/<str:pk>', views.resposta, name='resposta'),
     path('melhor-resposta/<str:forum_pk>/<str:answer_pk>', views.melhorResposta, name='melhor-resposta'),
@@ -27,7 +28,7 @@ urlpatterns = [
 
     path('erro', views.erroPagina, name='erro'),
 
-    path('noti', views.noti, name='noti'),
+    path('configuracoes', views.configuracoes, name='configuracoes'),
+
     path('ini2', views.ini2, name='ini2'),
-    path('carrossel-teste', views.carrossel_teste, name='carrossel-teste'),
 ]

@@ -1,6 +1,9 @@
 {% load static %}
+{% load timesince_pt %}
+{% include 'django_quill/media.html' %}
 <div class="divTitulo">
-   <script>
+<script>
+     
       $(window).scroll(function(){
           if ($(this).scrollTop() > 1 ){
               $('divTitulo').addClass("sticky");
@@ -9,6 +12,7 @@
               $('divTitulo').removeClass("sticky");
           }
       }
+                       
   </script>
 <div class="nav_content_container">
 
@@ -19,53 +23,200 @@
 <div class="search_container">
 <form action="{%url 'home'%}" method="get">
     <div>
+      
     <input type="text" id="search" name="q" class="search_input" placeholder="Pesquise a sua dúvida...">
   
     <button type="submit" style="" class="hb">
     <img class="lupa" src="{% static 'images/lupa2.png' %}" alt="lupa pesquisa">
     </button>
+      
     </div>
-  <!-- <img  class="lupa" src="{% static 'images/lupa.png' %}" alt="lupa pesquisa"> -->
 </form>
 </div>
 
 
-<a href="{% url 'forum-creation' %}" style="text-decoration:none;">
-<button class='bntCriarDuvida'>
+<!-- <a href="{% url 'forum-creation' %}" style="text-decoration:none;"> -->
+<div class='criarDuvidaNav' onclick="openDuvida()">
 <strong>
-<span style="color:#000;font-size: 25px;vertical-align: middle;margin-right: 5px;">+ </span> 
-Criar Dúvida
+<span style="font-size: 25px;vertical-align: middle;margin-right: 5px;">+ </span> Criar Dúvida
 </strong>
-</button>
-</a>
+</div>
+<!-- </a> -->
+  
+<div class="profileimg" onclick="openModal()" >
+   <img class="profile-imagem" src="{{request.user.profile.profile_picture.url}}" alt="profile picture">
+</div>
 
-<div class="profileimg">
-<a href="{%url 'profile' user.id%}">
-<img  class="profile-imagem" src="{{request.user.profile.profile_picture.url}}" alt="profile picture">
-</a>
+<div class="img-wrapper">
+{%if request.user.profile.unread_notifications%}
+<img  class="notification-icon" src="{% static 'images/notification1.png' %}" alt="notifications" id="noti-button">
+{%else%}
+<img  class="notification-icon" src="{% static 'images/notification0.png' %}" alt="notifications" id="noti-button">
+{%endif%}
+</div>  
 </div>
 
 <div>
-<a href="{%url 'noti'%}">
-{%if request.user.profile.unread_notifications%}
-<img  class="notification-icon" src="{% static 'images/notification1.png' %}" alt="notifications">
-{%else%}
-<img  class="notification-icon" src="{% static 'images/notification0.png' %}" alt="notifications">
-{%endif%}
-</a>
 </div>
-  
 </div>
 </div>
 
+
+<div id="modal-container" class="modal-containerperfil">
+  <div class="modalperfil" style="width:200px;height:auto;">
+        
+    <a href="{%url 'profile' user.id%}" style="text-decoration:none;color:black;">
+    <div class="perfil-options-container">
+    <p class="perfil-options"><strong>Ver Perfil</strong></p>
+    </div>
+    </a>
+
+    <a href="{%url 'configuracoes'%}" style="text-decoration:none;color:black;">
+    <div class="perfil-options-container">
+    <p class="perfil-options"><strong>Configurações</strong></p>
+    </div>
+    </a>
+      
+    <a href="{%url 'logout'%}" style="text-decoration:none;color:black;">
+    <div class="perfil-options-container">
+    <p class="perfil-options"><strong>Sair</strong></p>
+    </div>
+    </a>
+
+    <hr class="hr-navbar">
+        
+  </div>
+</div> 
+
+<div id="modal-duvida" class="modal-containerduvida">
+    <div class="modal-duv">
+        <button class="fechar" id="fechar">X</button>
+
+      <div>
+
+      <form action="{%url 'forum-creation'%}" method="POST">{% csrf_token %}
+      </br>
+
+      <div class="" style="display: flex;align-items:center;margin-bottom:80px;">
+
+      <input class='caixaTitulo' type="text" name="title"style="font-family:sans-serif;font-size:20px;" value="{{form.instance.title}}" placeholder="Insira um título"/>
+
+      </br></br></br>
+
+      {%if not editando%}
+      <select name="tags" id="id_tags" required>
+      <option value="" selected disabled>Escolha uma matéria</option>
+      {%for tag in nav_tags%}
+      <option value="{{tag.id}}">{{tag.name}}</option>
+      {%endfor%}
+      </select>
+
+        <section id="id_anonimo" required style="margin-left:20px;">
+          <div class="btn" id="switch">
+            <input type="checkbox" class="checkbox" name="anonimo"/>
+            <div class="pub"value="false" selected></div>
+            <div class="ano" value="true"></div>
+          </div>
+      </section>
+      <!-- <select name="anonimo" id="id_anonimo" required style="margin-left:20px;">
+      <option value="false" selected>Público</option>
+      <option value="true">Anônimo</option>
+      </select> -->
+      {%endif%}
+
+      </div>
+      {{nav_form.text}}
+
+      <div id="editor"></div>
+
+      <div class='criar'>
+      {%if not editando%}
+      <input class='bntCriar' id="Criar" type="submit" value="Enviar Dúvida"/>
+      {%else%}
+      <input class='bntCriar' id="Criar" type="submit" value="Salvar Mudanças"/>
+      {%endif%}
+      </div>
+
+      </form>
+      </div>
+
+    </div>
+</div>
+<script>
+  function openDuvida(){
+      const modal = document.getElementById('modal-duvida')
+      modal.classList.add('mostrar')
+
+      modal.addEventListener('click', (e) =>{
+          if (e.target.id == 'modal-duvida' || e.target.id == "fechar"){
+              modal.classList.remove('mostrar')
+              localStorage.fechaModal = 'modal-duvida'
+          }
+      })
+  }
+</script>
+
+<script>
+  function openModal(){
+      const modal = document.getElementById('modal-container')
+      modal.classList.add('mostrar')
+
+      modal.addEventListener('click', (e) =>{
+          if (e.target.id == 'modal-container' || e.target.id == "fechar"){
+              modal.classList.remove('mostrar')
+              localStorage.fechaModal = 'modal-container'
+          }
+      })
+  }
+</script>
+
+<div id="modal-not" class="modal-containernot">
+    <div class="modalnot">
+        <h1 style="margin-top:13px;margin-bottom:18px;">Notificações</h1>
+        <hr class="hr-navbar">
+        <div class="sb" style="overflow:auto;height:270px" id="myDiv">
+          
+        {%for noti in request.user.notification_set.all%}
+        <a href="{%url 'forum' noti.forum.id%}" style="text-decoration:none;color:black">
+        <div class= "noti-container" style="display:flex;">
+        <img  class="noti-imagem" src="{{noti.notification_image.url}}" alt="notification image">
+        <div>
+        <p class="noti-text">
+        <span style="color:#ff80b3"><strong>{{noti.sender}}</strong></span> {{noti}} <strong>"{{noti.forum}}"</strong>
+        </p>
+        <small class="noti-time">há {{noti.created|timesince_pt}}</small>
+        </div>   
+        </div>
+        </a>
+        <hr class="hr-navbar noti-hr">
+        {%endfor%}
+        </div>
+    </div> 
+</div> 
+
+
 <style>
+  :root{
+    --primary: #d5ddf5;
+    --secondary: #212c59;
+    --button: #6172aa;
+    --puckly: #ff80b3;
+
+  }
+
+  .hr-navbar{
+  background-color: #000;
+  border: none;
+  height: 2px;
+  }
+  
   .lupa{
-    height:30px;
+    height:23px;
     cursor: pointer;
     border: none;
     position: absolute;
-    top: 36px;
-    left: 56.8%;
+    top: 20%;
+    left: 90%;
     display: block;
   }
 
@@ -80,48 +231,61 @@ Criar Dúvida
     width: 50px;
     height: 50px;
     padding-left:20px;
+    padding-right:14px;
 }
 .profile-imagem{
     width: 42px;
     height: 42px;
     object-fit: cover;
     border-radius: 50px;  
-    border: 4px solid #4e5880;
+    border: 4px solid #4e5880D0;
+}
+.profile-imagem:hover{ 
+    border: 4px solid #272c52E8;
+    transition: border 0.6s ease;
+    cursor: pointer;
 }
 
-.notification-icon{
-    padding-left:20px;  
+.notification-icon{  
     width: 30px;
     /* border-radius: 50px;  
     border: 4px solid #4e5880; */
 }
 
-  .bntCriarDuvida{
-  /* border-radius:5px;
-  background-color: #FFB6C1;
-  border:none; */
-  display: flex;
-  align-items: center;
-  width: 170px;
-  padding: 5px 20px;
-  font-size: 16px;
-  border: 0px solid #deebff;
-  border-radius: 50px;
-  font-family:sans-serif; 
-  background-color: #ff80b3;
-  text-align:center;
-  box-sizing: border-box;
+  .criarDuvidaNav{
+    padding: 5px 20px;
+    border-radius: 50px;
+    /* margin: 0 10px; */
+    border: 2px #ff80b3 solid;
+    transition: 0.25s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    align-items: center;   
+    width: 170px;
+    background-color: #272c52E8;
+    color:#ff80b3;
+    font-family:sans-serif;
+    font-size: 16px;
+
+    box-sizing: border-box;
 }
 
-.bntCriarDuvida:hover {
-   background-color: #FFB6C1;
+.criarDuvidaNav:hover {
+   /* background-color: rgba(255, 255, 255, 0.5); */
+    /* border: 2px #fff solid; */
+    color:white;
     cursor: pointer;
+}
+
+.criarDuvidaNavText{
+    
 }
   
   .search_container{
   text-align:center;
   padding-right:20px;
   padding-left:20px;
+  position:relative;
 }
   
 .search_input{
@@ -134,13 +298,16 @@ Criar Dúvida
   font-family:sans-serif;
   background-color: #f2f5fa;
 }
-  
-  .logo-imagem{
-    width: 60px;
-    height: 60px;
+.search_input:hover{
+  background-color: #e9ecf2;
 }
   
-  .divTitulo{
+.logo-imagem{
+  width: 60px;
+  height: 60px;
+}
+
+.divTitulo{
   background-color: #272c52E8;
   color: white;
   height:100px;
@@ -149,9 +316,9 @@ Criar Dúvida
   position: fixed;
   top: 0;
   z-index:1;
-  }
-  
-  .nav_content_container{
+}
+
+.nav_content_container{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,4 +327,468 @@ Criar Dúvida
   padding-top: 20px;
   font-family:sans-serif;
 }
+.modal-containerperfil{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: -27%;
+  left: 24%;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  display: none;
+    
+}
+.modal-containernot{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: -18%;
+  left: 24%;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  display: none;
+
+}
+
+.modalperfil{
+  background-color:#f2f5fa;
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 10px;
+  font-family:sans-serif;
+  box-shadow: 0 4px 16px 0 rgba(50,60,69,.65);
+}
+.modalnot{
+  width: 15%;
+  min-width:120px;
+  height: 350px;
+  background-color:#f2f5fa;
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 10px;
+  font-family:sans-serif;
+  box-shadow: 0 4px 16px 0 rgba(50,60,69,.65);
+}
+.modal h1{
+  margin-bottom: 20px;
+  color:#000;
+}
+
+@keyframes animate-modal {
+    from{
+        opacity: 0;
+        transform: translate3d(0, -20px, 0);
+    }
+
+    to{
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.modal-containerperfil.mostrar{
+    display: flex;
+}
+.modal-containernot.mostrar{
+    display: flex;
+}
+
+.mostrar .modal{
+    animation: animate-modal .3s;
+}
+
+.noti-imagem{ 
+width: 40px;
+height: 40px;
+object-fit: cover;
+border-radius: 50px;  
+/* border: 4px solid #4e5880; */
+}
+.noti-text{
+  margin-right:20px;
+  font-family:sans-serif;
+  line-height: 22px;
+  font-size:15px;
+  margin-top:0px;
+  margin-left:8px;
+  margin-bottom:5px;
+}
+.noti-time{
+  margin-right:20px;
+  font-family:sans-serif;
+  font-size:12px;
+  margin-top:7px;
+  margin-left:8px;
+  margin-bottom:9px;
+  color:#56595e;
+}
+.noti-container{
+  border-radius:10px;
+  border: 8px solid #c9ccd100;
+}
+.noti-container:hover{
+  background-color:#dfe3eb;
+}
+.noti-hr{
+  background-color:#aeb4bf;
+  margin-right:20px;
+}
+
+.sb::-webkit-scrollbar {
+  width: 7px;
+}  
+.sb::-webkit-scrollbar-track {
+  background: #f2f5fa;
+}
+.sb::-webkit-scrollbar-thumb {
+  background: #aeb4bf;
+  border-radius: 50px;
+}
+
+.perfil-options{
+  font-family:sans-serif;
+  font-size:17px;
+}
+.perfil-options-container{
+  padding-left:10px;
+  border:1px solid #c9ccd100;
+  border-radius:10px;
+}
+.perfil-options-container:hover{
+  background-color:#dfe3eb;
+}
+
+
+.img-wrapper {
+  border:6px solid #c9ccd100;
+  border-radius:50px;
+}
+.img-wrapper:hover {
+  background-color: #272c52;
+  transition: background-color 0.6s ease;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+  
+
+  .barra{
+    background-color: #212c59;
+    color: white;
+    font-size: 20px;
+    font-family: sans-serif;
+    text-align:center;
+  }
+
+  .caixaTitulo{
+    border: none;
+    border-radius: 15px;
+    height: 50px;
+    width: 500px;
+    /* margin-bottom:30px; */
+    margin-right:200px;
+    padding-left:20px;
+    background-color: #e0e9f0;
+  }
+
+  .caixaText{
+    border: none;
+    border-radius: 15px;
+    height: 30%;
+    width: 60%;
+  }
+
+  .input{
+    text-align:center;
+    margin: 5%;
+  }
+
+  .bntCriar{
+    text-align:center;
+    height: 7%;
+    width: 14%;
+    font-size: 25px;
+    border-radius: 50px;
+    border: 2px #ff80b3 solid;
+    transition: 0.25s ease-in-out;
+    cursor: pointer; 
+    background-color: #272c52E8;
+    color:#ff80b3;
+    font-family:sans-serif;
+  }
+  .bntCriar:hover{
+    color:white;
+      cursor: pointer;
+  }
+
+  .criar{
+    text-align:center;
+  }
+
+  .input_title{
+    font-family:sans-serif;
+    color:#ff80b3;
+    margin-top:40px;
+  }
+
+  #id_tags{
+    appearance: none;
+    font-family:sans-serif;
+    font-size:16px;
+    height:46px;
+    padding:0 35px 0 15px;
+    background-color:#e0e9f0;
+    border-radius:20px;
+    border:0px #e0e9f0 solid;
+  }
+  #id_title{
+    background-color:var(--puckly);
+  }
+  #quill-id_text{
+    background-color:white;
+    
+    /* border: 05px solid black;
+    width:70%;
+    margin:20px */
+    height:300px;
+    margin-bottom:30px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border: 10px solid #e0e9f0;
+    border-top: 0px solid #e0e9f0;
+  }
+  .ql-toolbar.ql-snow {
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    padding: 8px;
+    border: 10px solid #e0e9f0;
+    background-color:#e0e9f0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  #Criar{
+      font-family: sans-serif;
+      width: 220px;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 15px;
+      outline: none;
+      text-align:center;
+      border-radius: 50px;
+      border: 2px #ff80b3 solid;
+      transition: 0.25s ease-in-out;
+      cursor: pointer;  
+      background-color: #272c52E8;
+      color:#ff80b3;
+  }
+  #Criar:hover {
+     color:white;
+      cursor: pointer;
+  }
+    .btn {
+      position: relative;
+      top: 50%;
+      width: 100px;
+      height: 46px;
+      /* margin: -20px auto 0 auto; */
+      overflow: hidden;
+      background-color:#e0e9f0;
+    }
+    .btn,
+    .btn .ano {
+      border-radius: 100px;
+    }
+    .checkbox {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 3;
+    }
+    .pub {
+      z-index: 2;
+    }
+    .ano {
+      width: 100%;
+      background-color: #ebf7fc;
+      transition: 0.3s ease all;
+      z-index: 1;
+    }
+
+    #switch .pub:before {
+      content:"";
+      position: absolute;
+      top: 4px;
+      left: 5px;
+      width: 30px;
+      height: 20px;
+      color: #fff;
+      font-size: 25px;
+      font-weight: bold;
+      text-align:center;
+      background-image:url("{{request.user.profile.profile_picture.url}}");
+      background-size:cover;
+      line-height: 1;
+      padding: 9px 4px;
+      border-radius: 50%;
+      transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+    }
+    #switch .checkbox:checked + .pub:before {
+      content:"";
+      left: 56px;
+      background-image:url("{% static 'images/anonimopp.png' %}");
+      background-size:cover;
+    }
+    #switch .checkbox:checked ~ .ano {
+      background-color: #fcebeb;
+    }
+    #switch .pub,
+    #switch .pub:before,
+    #switch .ano {
+      transition: 0.3s ease all;
+    }
+
+  .modal-containerduvida{
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #000000A0;
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      display: none;
+  }
+
+  .modal-duv{
+      width: 60%;
+      min-width:400px;
+      min-height: 200px;
+      backdrop-filter: blur(10px);
+      padding: 50px;
+      background-color: #272c52FA;
+      border-radius: 15px;
+      border: 3px solid #ff80b3;
+  }
+
+  .fechar{
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background-color: #b61b1b;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15pt;
+      cursor: pointer;
+  }
+  .modal-containerduvida.mostrar{
+      display: flex;
+  }
+
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{{request.user.id|json_script:"json-user"}}
+<script>
+  const user = JSON.parse(document.getElementById("json-user").textContent);
+  const notiSocket = new WebSocket(
+    'wss://'
+    + window.location.host
+    + '/ws/'
+    + user
+    + '/'
+  );
+
+  notiSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.action === 'notify_update') {
+        document.querySelector('#noti-button').src = "{% static 'images/notification1.png' %}";
+    }
+
+    const myDiv = document.getElementById('myDiv');
+    const existingContent = myDiv.innerHTML;
+    const forumUrl = "{% url 'forum' 0 %}".replace("0", data.forum);
+    
+    const newContent = `
+        <a href="${forumUrl}" style="text-decoration:none;color:black">
+        <div class= "noti-container" style="display:flex;">
+        <img  class="noti-imagem" src="${data.picture}" alt="notification image">
+        <div>
+        <p class="noti-text">
+        <span style="color:#ff80b3"><strong>${data.sender}</strong></span> ${data.text} <strong>"${data.forum_name}"</strong>
+        </p>
+        <small class="noti-time">há 0 minutos</small>
+        </div>   
+        </div>
+        </a>
+        <hr class="hr-navbar noti-hr">
+`;
+    
+    myDiv.innerHTML = newContent + existingContent;
+    
+  };
+
+  notiSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+  };
+
+  //CLICK
+
+  document.querySelector('#noti-button').onclick = function(e) {
+      const modal = document.getElementById('modal-not')
+      modal.classList.add('mostrar')
+
+      modal.addEventListener('click', (e) =>{
+          if (e.target.id == 'modal-not' || e.target.id == "fechar"){
+              modal.classList.remove('mostrar')
+              localStorage.fechaModal = 'modal-not'
+          }
+      })
+    
+    if (document.querySelector('#noti-button').src.endsWith('notification1.png')){
+        document.querySelector('#noti-button').src = "{% static 'images/notification0.png' %}";
+    }
+    const data = {
+        action: 'update_profile'
+    };
+    notiSocket.send(JSON.stringify(data));
+};
+
+</script>
+
+</body>

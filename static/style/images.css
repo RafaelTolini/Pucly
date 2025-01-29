@@ -1,0 +1,53 @@
+/* general styles */
+.ppimage{
+  object-fit:cover;
+  border-radius:50%;
+}
+
+
+
+/* profile picture styles */
+.duvida-pp{
+  width: 45px;
+  height: 45px; 
+  border: 4px solid #4e5880;
+}
+.answer-pp{
+  border: 4px solid #b4bccc; 
+}
+.ranking-pp{
+  width:42px; 
+  height:42px; 
+  border: 4.5px solid #4e5880;
+  margin-right:20px;
+}
+.caixa-duvida-pp{
+  margin-right: 10px;
+  width: 30px;
+  height: 30px; 
+  border: 4px solid #4e5880;
+}
+.comment-pp{
+  width: 28px;
+  height: 28px;
+}
+.comment-input-pp{
+  width: 35px;
+  height: 35px;
+  margin-right:10px;
+}
+
+
+
+/* image styles */
+.brain-image{
+    width: 40px;
+    height: 40px;
+    margin-right:10px;
+}
+.medal-image{
+    width:35px; 
+    height:35px;
+    margin-left:-60px;
+    margin-right:25px;
+}

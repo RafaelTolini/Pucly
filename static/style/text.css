@@ -1,0 +1,94 @@
+/* links */
+.whitelink {
+  text-decoration: none;
+  color: white;
+}
+.whitelink:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
+}
+.pinklink {
+  text-decoration: none;
+  color: #ff80b3;
+}
+.pinklink:hover {
+  text-decoration: underline;
+  text-decoration-color: #ff80b3;
+}
+.blacklink {
+  text-decoration: none;
+  color: black;
+}
+.blacklink:hover {
+  text-decoration: underline;
+  text-decoration-color: black;
+}
+.pointercursor:hover{
+  cursor:pointer;
+}
+.nocursor:hover{
+  cursor:default;
+}
+.nodecoration{
+  text-decoration: none;
+}
+
+
+
+/* plain text */
+.whitetext{
+  color:white;
+}
+.blacktext{
+  color:black;
+}
+.pinktext{
+  color:#ff80b3;
+}
+
+.site-font{
+  font-family:sans-serif;
+}
+
+.center-text{
+  text-align:center;
+}
+.left-text{
+  text-align:left;
+}
+.right-text{
+  text-align:right;
+}
+
+
+
+/* sizes */
+.size-15{
+  font-size:0.93rem;  /* 15 */
+}
+.size-16{
+  font-size:1rem;  /* 16 */
+}
+.size-17{
+  font-size:1.06rem;  /* 17 */
+}
+.size-20{
+  font-size: 1.25rem; /* 20 */
+}
+.size-25{
+  font-size: 1.56rem; /* 25 */
+}
+.size-40{
+  font-size: 2.5rem; /* 40 */
+}
+.size-50{
+  font-size: 3.12rem; /* 50 */
+}
+
+
+
+/* specific */
+.duvida-title-home{
+  margin-top:15px;
+  margin-bottom:15px;
+}

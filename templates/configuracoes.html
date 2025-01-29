@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <link rel="stylesheet" href="{% static 'style/fundo.css' %}"/>
+</head>
+<body>
+{%include 'navbar.html'%}
+
+<div class='content_div'>
+  <div class='foto de perfil'>
+    </br></br></br>
+    
+    <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+      {%include 'perfilphoto.html'%}
+  </div>
+  <div class='config'>
+  </br></br>
+      <label for="email">Email:</label>
+      <input type="email" class="email" name="email" value="{{form_user.instance.email}}">
+      <img class='canetaEditar' src="../static/images/caneta.svg">
+  </br></br></br>
+    
+      <label for="usuário">Usuário:</label>
+      <input type="text" class="usuário" name="username" value="{{form_user.instance.username}}">
+      <img class='canetaEditar' src="../static/images/caneta.svg">
+    </br></br></br>
+
+
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <p style="color:red;font-size:13px;">{{ message }}</p>
+          {% else %}
+          <p style="color:green;font-size:13px;">{{ message }}</p>
+          {% endif %}
+          {% endfor %}
+      </ul>
+      {% endif %}
+      <label for="senha">Senha Antiga:</label>
+      <input type="password" class="senha" name="old_password">
+      <img class='canetaEditar' src="../static/images/caneta.svg">
+    </br></br>
+      <label for="senha">Senha Nova:</label>
+      <input type="password" class="senha" name="new_password">
+      <img class='canetaEditar' src="../static/images/caneta.svg">
+    </br></br>
+      <label for="senha">Confirme a senha:</label>
+      <input type="password" class="senha" name="confirm_password">
+      <img class='canetaEditar' src="../static/images/caneta.svg">
+    </br></br>
+    <button type="submit" class='bntSalvar'><strong>Salvar Alterações</strong></button>
+    </form>
+  </div>
+</div>
+</body>
+<style>
+  
+body{
+  background-image: url("{% static 'images/fundo-tela.png' %}");
+  font-family: sans-serif;
+  margin:0;
+}
+
+.content_div{
+  text-align:center;
+}
+
+.canetaEditar{
+  width:25px;
+}
+
+.config{
+  position:absolute;
+  left: 20%;
+  top: 45%;
+  border-radius: 30px;
+  width:60%;
+  height: 53%;
+  background-color:#272c52E8;
+  text-align: center;
+}
+  
+  .config input{
+  border-radius: 30px;
+  width:500px;
+  height: 10px;
+  border:none;
+  padding:2%;
+  align-items: right;
+}
+
+  .config label{
+  color: white;
+  font-size:20px;
+}
+
+.bntSalvar{
+  width: 190px;
+  height: 50px;
+  padding: 5px 20px;
+  font-size: 16px;
+  border-radius: 50px;
+  text-align:center;
+  box-sizing: border-box;
+  border: 2px #ff80b3 solid;
+  transition: 0.25s ease-in-out;
+  cursor: pointer;  
+  background-color: #272c52E8;
+  color:#ff80b3;
+  font-family:sans-serif;
+}
+
+.bntSalvar:hover{
+  color:white;
+  cursor: pointer;
+}
+
+img{
+  cursor: pointer;
+}
+
+</style>
+

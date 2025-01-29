@@ -2,288 +2,338 @@
 {% load static %}
 {% load timesince_pt %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'images/logo.png' %}"/>
     <link rel="stylesheet" href="{% static 'style/fundo.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/text.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/buttons.css' %}"/>
 </head>
 
-<body style="margin-top:8%;margin-left:0;">
+<body style="margin-top:8%; margin-left:0;">
 <main class="main">
-  
-{%include 'navbar.html'%}
 
-<div style="margin-top:07%;margin-left:0;">
-  
+{% include 'navbar.html' %}
 
-  {%include 'perfilphoto.html'%}
-  
-<div class="container">
+<div style="margin-top:7%; margin-left:0;">
 
-  <div></div>
-  
-  <div class='caixas'>
-    <h1 class='titulo'>Respostas</h1>
-    <hr class="title_hr">
-    {% for answer in answers %}
-    <div class='answer'>
-    <p style="margin-top:15px">{{answer|truncatechars:37}}</p>
-    <p style="margin-top:8px;font-size:12px;">em <span class="nomePerfil"><strong>
-    <a href="{% url 'forum' answer.forum.id %}" class="nomePerfil">{{answer.forum|truncatechars:45}}</a>
-    </strong></span></p>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class='caixas'>
-    <h1 class='titulo'>Dúvidas</h1>
-    <hr class="title_hr">
-    {% for forum in forums %}
-
-    {%if not forum.anonimo%} 
-    <div class='duvidas'>
-    <div style="display:flex;align-items: center;">
-    <img  class="forum-imagem" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
-    <strong><span class='nomeForum'>{{forum.host}}</span></strong>
-    </div>
-    <a href="{% url 'forum' forum.id %}"><h3 style="margin-top:10px;">{{forum.title}}</h3></a>
-    <p>{{forum.text.html|safe|truncatechars:250}}</p>
-    {% for tag in forum.tags.all %}
-    <small style="color:#ff80b3">{{tag}}</small>
-    <small>  |  </small>
-    {% endfor %}
-    <small style="color:#fff">há {{forum.created|timesince_pt}}</small>
-    <small>  |  </small>
-    {% if request.user == forum.host %}
-    <a href="{% url 'editar-forum' forum.id %}"><button class='bntEditar'>Editar</button></a>
-    <small>  |  </small>
-    <a href="{% url 'deletar-forum' forum.id %}"><button class='bntDeletar'>Deletar</button></a>
-    {% endif %}
-    <hr class="duvida_hr">
-    </div>
-    </br>
-    
-    {%elif request.user == forum.host%}
-    
-    <div class='duvidas'>
-    <div style="display:flex;align-items: center;">
-    <img  class="forum-imagem" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
-    <strong><span class='nomeForum'>Anônimo</span></strong>
-    </div>
-    <a href="{% url 'forum' forum.id %}"><h3 style="margin-top:10px;">{{forum.title}}</h3></a>
-    <p>{{forum.text.html|safe|truncatechars:250}}</p>
-    {% for tag in forum.tags.all %}
-    <small style="color:#ff80b3">{{tag}}</small>
-    <small>  |  </small>
-    {% endfor %}
-    <small style="color:#fff">há {{forum.created|timesince_pt}}</small>
-    <small>  |  </small>
-    <a href="{% url 'editar-forum' forum.id %}"><button class='bntEditar'>Editar</button></a>
-    <small>  |  </small>
-    <a href="{% url 'deletar-forum' forum.id %}"><button class='bntDeletar'>Deletar</button></a>
-    <hr class="duvida_hr">
-    </div>
-    </br>
-    
-    {%endif%}
-    
-    {% endfor %}
-  </div>
-
-  <div class='caixas'>
-    <h1 class='titulo'>Estatísticas</h1>
-    <hr class="title_hr">
-    <p class="stats"><strong>{{usuario}} tem <span class="stats_numbers">{{profile.pontos}}</span> pontos</strong></p>
-    <p class="stats"><strong>Respondeu à <span class="stats_numbers">{{usuario.answer_set.count}}</span> dúvidas</strong></p>
-    <p class="stats"><strong>Criou <span class="stats_numbers">{{usuario.forumpost_set.count}}</span> dúvidas</strong></p>
-    <p class="stats"><strong>Tem <span class="stats_numbers">{{melhores}}</span> respostas marcadas como "melhor resposta"</strong></p>
-  </div>
-
-  <div></div>
-  
-</div>
+<div style="display:flex; flex-direction: column; align-items: center;">
+<img class="box-perfil" src="{{profile.profile_picture.url}}" alt="profile picture">
+<h1 class="perfil-nome">{{usuario}}</h1> 
 </div>
 
-{% include 'footer.html' %}
+ 
+
+
+  <div class="navegation">
+
+        <label for="slide1" class="manual-btn"><strong>Dúvidas</strong></label>
+        <label for="slide2" class="manual-btn"><strong>Respostas</strong></label>
+        <label for="slide3" class="manual-btn"><strong>Estatísticas</strong></label>
+    </div> 
+  <div class="content"> 
+      <div class="slides">
+          <!--radio buttons-->
+          <input class="input" type="radio" name="radio-btn" id="slide1" checked/>
+          <input class="input" type="radio" name="radio-btn" id="slide2"/>
+          <input class="input" type="radio" name="radio-btn" id="slide3"/>
+
+          <div class="slide s1">
+              <h1 class='titulo'>Dúvidas</h1>
+                <hr class="title_hr">
+                <div style="display:flex; flex-direction:column;justify-content:center;align-items:center">
+                {% for forum in forums %}
+                <!-- Seção de Perguntas -->
+                {% if not forum.anonimo %}
+                  <!-- Usuário Logado -->
+                  <div class='duvidas'>
+                    <div style="display:flex;align-items: center;">
+                      <img  class="forum-imagem" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
+                      <strong><span class='nomeForum nocursor'>{{forum.host}}</span></strong>
+                    </div>
+                    <a href="{% url 'forum' forum.id %}" class="whitelink"><h3 style="margin-top:10px;">{{forum.title}}</h3></a>
+                    <p>{{forum.text.plain|safe|truncatechars:250}}</p>
+                    {% for tag in forum.tags.all %}
+                      <a href="{% url 'home'%}?q={{tag}}" class="pinklink">
+                        <small style="color:#ff80b3">{{tag}}</small>
+                      </a>
+                      <small style="color:#1d2440;"><strong> |  </strong></small>
+                    {% endfor %}
+                    <small style="color:#fff" class="nocursor">há {{forum.created|timesince_pt}}</small>
+                    {% if request.user == forum.host %}
+                     <button class='pink-main-button edit-delete-button' onclick="openDelete('{{forum.id}}','{{forum.title}}')">Deletar</button>
+                     <!-- <button class='pink-main-button edit-delete-button' onclick="openEditar('{{forum.id}}','{{forum.title}}','{{forum.text.html}}')">Editar</button> -->
+                    {% endif %}
+                    <hr class="duvida_hr">
+                  </div>
+                  </br>
+                {% else %}
+                  <!-- Usuário Anônimo -->
+                  <div class='duvidas'>
+                    <div style="display:flex;align-items: center;">
+                      <img  class="forum-imagem" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
+                      <strong><span class='nomeForum nocursor'>Anônimo</span></strong>
+                    </div>
+                    <a href="{% url 'forum' forum.id %}" class="whitelink"><h3 style="margin-top:10px;">{{forum.title}}</h3></a>
+                    <p>{{forum.text.html|safe|truncatechars:250}}</p>
+                    {% for tag in forum.tags.all %}
+                      <a href="{%url 'home'%}?q={{tag}}" class="pinklink">
+                        <small style="color:#ff80b3">{{tag}}</small>
+                      </a>
+                      <small style="color:#1d2440;"><strong> | </strong></small>
+                    {% endfor %}
+                    <small style="color:#fff" class="nocursor">há {{forum.created|timesince_pt}}</small>
+                    <button class='pink-main-button edit-delete-button' onclick="openDelete('{{forum.id}}','{{forum.title}}')">Deletar</button>
+                    <!-- <button class='pink-main-button edit-delete-button' onclick="openEditar('{{forum.id}}','{{forum.title}}','{{forum.text.html}}')">Editar</button> -->
+                    <hr class="duvida_hr">
+                  </div>
+                  </br>
+                {% endif %}
+                {% endfor %}
+                </div>
+              </div>
+
+    <div class="slide">
+          <h1 class='titulo'>Respostas</h1>
+          <hr class="title_hr">
+          <div style="display:flex; flex-direction:column;justify-content:center;align-items:center">
+          {% for answer in answers %}
+            <div class='answer'>
+              <p style="margin-top:15px">{{answer|truncatechars:37}}</p>
+              <p style="margin-top:8px;font-size:12px;">em <span class="nomePerfil"><strong>
+              <a href="{% url 'forum' answer.forum.id %}" class="nomePerfil pinklink">{{answer.forum|truncatechars:45}}</a>
+              </strong></span></p>
+            </div>
+          {% endfor %}
+          </div>
+    </div>
+
+    <div class="slide">
+        <h1 class='titulo'>Estatísticas</h1>
+        <hr class="title_hr">
+        <p class="stats"><strong>{{usuario}} tem <span class="stats_numbers">{{profile.pontos}}</span> pontos</strong></p>
+        <p class="stats"><strong>Respondeu à <span class="stats_numbers">{{usuario.answer_set.count}}</span> dúvidas</strong></p>
+        <p class="stats"><strong>Criou <span class="stats_numbers">{{usuario.forumpost_set.count}}</span> dúvidas</strong></p>
+        <p class="stats"><strong>Tem <span class="stats_numbers">{{melhores}}</span> respostas marcadas como "melhor resposta"</strong></p>
+    </div>
+      </div>
+  </div>
 </main>
+  
+  {% include "deletar.html" %}
+  {% include "editar.html" %}
 </body>
 
 <style>
+  
+  .content{
+      width: 1205px; 
+      height: 520px;
+      position: absolute;
+      left: 50%;
+      top: 80%;
+      transform: translate(-50%, -50%);
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: #eaf1f6;
+      border: 6px #8994ab solid;
+  }
 
-body{
-  /* background: #fff5ff; */
-}
-  
-small{
-  color:black;
-}
-  
-a{
-  text-decoration:none;
-  color:white;
-}
-.container {
-    display: grid;
-    grid-template-columns: 0.4fr 1fr 2.5fr 1fr 0.4fr;
+  .navegation{
+      position:absolute;
+      top: 47.5%;
+      left: 20%;
+      display: flex;
+      font-family:sans-serif;
+  }
+
+  .manual-btn{
+      padding:10px;
+      background-color: #eaf1f6;
+      height: 15px;
+      border: 6px solid #8994ab;
+      border-top-left-radius:8%;
+      border-top-right-radius:8%;
+      border-bottom: 0px;
+      margin: 8px;
+      margin-bottom: 0px;
+      cursor: pointer;
+  }
+
+  .manual-btn:hover{
+      background-color: #ffffff;
+  }
+
+  .slides input{
+      display: none;
+  }
+
+  .slides{
+      display: flex;
+      width: 300%;
+      height: 100%;
+  }
+
+  .slide{
+      width:33.34%;
+      /* transition: 0.2s; */
+      overflow:auto;    
+  }
+
+  #slide1:checked ~ .s1{
+      margin-left: 0;
+  }
+
+  #slide2:checked ~ .s1{
+      margin-left: -33.34%;
+  }
+
+  #slide3:checked ~ .s1{
+      margin-left: -66.67%;
+  }
+
+  .usuario{
+    background-color: #212c59;
+    color: white;
+    height:100px;
+    width:100%;
+  }
+
+  .answer{
+    font-family: sans-serif;
+    border-radius: 15px;
+    background-color: #272c52E8;
+    padding: 3%;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px #231b52;
+    color: white;
+    min-width:60%;
+  }
+
+  .titulo{
+    font-family: sans-serif;
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .nome_perfil_text{
+    background-color: #212c59;
+    color: white;
+    font-size: 35px;
+    font-family: sans-serif;
+    margin: 0%;
+    padding-top: 1.5%;
+    text-align: center;
+  }
+
+  .duvidas{
+    position: relative;
+    width: 70%;
+    margin-left:10px;
+    font-family: sans-serif;
+    padding: 2%;
+    padding-top: 2%;
+    border-radius: 15px;
+    background-color: #272c52E8;
+    box-shadow: 0 0 15px #231b52;
+    color: white;
+    text-decoration: none;
+  }
+
+  .nomePerfil{
+    font-family: sans-serif;
+    color: #ff80b3;
+  }
+
+  .stats{
+    font-family: sans-serif;
+    color: #212c59;
+    font-size: 25px;
+    text-align: center;
+  }
+
+  .stats_numbers{
+    font-family: sans-serif;
+    color: #000000;
+  }
+
+  .duvida_hr{
+    background-color: #212c59;
+    border: none;
+    height: 2px;
+  }
+
+  .title_hr{
+    background-color: #8994ab;
+    border: none;
+    height: 5px;
   }
   
-.main{
-  /* position: absolute; */
-  top: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 50;
-  /* background: #fff5ff;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center; */
+  .bntDeletar-Editar{
+    margin-left: 5px;
+    font-weight: 700;
+    border-radius: 50px;
+    border: 1px #ff80b3 solid;
+    transition: 0.25s ease-in-out;
+    cursor: pointer;  
+    background-color: #272c52E8;
+    color: #ff80b3;
+    font-family: sans-serif;
+    text-decoration: none;
+    float: right;
+  }
 
-}
-
-.usuario{
-  background-color: #212c59;
-  color: white;
-  height:100px;
-  width:100%;
-}
-
-.caixas{
-  margin: 1%;
-  padding:1%;
-  margin-top: 2.7px;
-  padding-top:2.7px;
-  background-color:	#eddfed;
-  border-radius: 15px;
-}
-
-.answer{
-  font-family:sans-serif;
-  border-radius: 15px;
-  background-color:#272c52E8;
-  padding: 3%;
-  margin-bottom:10px;
-  box-shadow:0 0 5px  #231b52;
-  color:white;
-}
-
-.titulo{
-  font-family:sans-serif;
-  font-familyfont: size 30px;  
-  font-size:30px;
-  text-align:center;
-}
-
-.nome_perfil_text{
-  background-color: #212c59;
-  color: white;
-  font-size: 35px;
-  font-family: sans-serif;
-  margin:0%;
-  padding-top:1.5%;
-  text-align:center;
-}
-
-.duvidas{
-  font-family:sans-serif;
-  padding: 3%;
-  padding-top: 2%;
-  border-radius: 15px;
-  background-color: #272c52E8;
-  box-shadow:0 0 15px  #231b52;
-  color:white;
-  text-decoration:none;
-}
-
-.nomePerfil{
-  font-family:sans-serif;
-  color:#ff80b3;
-}
-
-.stats{
-  font-family:sans-serif;
-  color:#212c59;
-  font-size:25px;
-  text-align:center;
-}
-
-.stats_numbers{
-  font-family:sans-serif;
-  color:#000000;
-}
-
-.duvida_hr{
-  background-color: #212c59;
-  border: none;
-  height: 2px;
-}
-
-.title_hr{
-  background-color: white;
-  border: none;
-  height: 5px;
-}
-
-.bntEditar{
-  border-radius:15px;
-  background-color: #ff80b3;
-  border:none;
-  color:black;
-  font-family:sans-serif;
-  font-weight:700;
-}
-.bntEditar:hover {
-   background-color: #FFB6C1;
+  .bntDeletar-Editar:hover {
+    color: white;
     cursor: pointer;
-}
+  }
 
-.bntDeletar{
-  border-radius:15px;
-  background-color: #ff80b3;
-  border:none;
-  color:black;
-  font-family:sans-serif;
-  font-weight:700;
-}
-.bntDeletar:hover {
-   background-color: #FFB6C1;
-    cursor: pointer;
-}
+  .forum-imagem{
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 50px;  
+      border: 4px solid #4e5880;
+  }
 
-.forum-imagem{
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-    border-radius: 50px;  
-    border: 4px solid #4e5880;
-}
+  .nomeForum{
+    font-family: sans-serif;
+    color: #ff80b3;
+    margin-left: 10px;
+    font-size: 17px;
+  }
 
-.nomeForum{
-  font-family:sans-serif;
-  color:#ff80b3;
-  margin-left: 10px;
-  font-size:17px;
-}
+  .perfil-imagem{
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50px;  
+      border: 0px solid #4e5880;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+  }
 
-.perfil-imagem{
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50px;  
-    border: 0px solid #4e5880;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.perfil-nome{
-    text-align:center;
-    font-family:sans-serif;
-    color:#0e1840;
-}
-
-
-  
+  .perfil-nome{
+      text-align: center;
+      font-family: sans-serif;
+      color: #0e1840;
+  }
+  .box-perfil{
+      text-align: center;
+      position: relative;
+      border-radius: 50%;
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      object-fit: cover;
+  }
 </style>
-
+  
+</html>

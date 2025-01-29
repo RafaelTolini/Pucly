@@ -1,160 +1,179 @@
 {% load index %}
-{% load range %}
-
-<div class="carrossel">
-    <div class="wrapper">
-      <section id="section1">
-        <a href=""><</a>
-          {% with lista=5|range:15 %}
-          {% for i in lista %}
+   <div id="wrapper">
+      <div id="carousel">
+        <div id="content">
+          {% for tag in tags %}
           <div class="carousel-item">
 
-            <a href="" style="text-decoration: none">
+            <a href="{%url 'home'%}?q={{tag}}" style="text-decoration: none;color:#ff80b3;">
               <div class="carousel-content">
-                <h3>{{ i }}</h3>
+                <h3>{{ tag }}</h3>
               </div>
             </a>
 
           </div>
           {% endfor %}
-        <a href="#section2">></a>
-        </section>
+        </div>
+      </div>
+      <button id="prev">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path fill="none" d="M0 0h24v24H0V0z" />
+          <path d="M15.61 7.41L14.2 6l-6 6 6 6 1.41-1.41L11.03 12l4.58-4.59z" />
+        </svg>
+      </button>
+      <button id="next">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path fill="none" d="M0 0h24v24H0V0z" />
+          <path d="M10.02 6L8.61 7.41 13.19 12l-4.58 4.59L10.02 18l6-6-6-6z" />
+        </svg>
+      </button>
     </div>
-  </div>
 
 
-<style>
 
 
-  :root {
-    --primary: #d5ddf5;
-    --secondary: #212c59;
-    --button: #6172aa;
-    --puckly: #ff80b3;
 
-  }
-  /* * {box-sizing: border-box;} */
-
-  .wrapper {
-  display: grid;
-  background-color:var(--secondary); 
-  grid-template-columns: repeat(3, 100%);
-  overflow: hidden;
-  scroll-behavior: smooth;
-
-  }
-
-  .wrapper section {
-   width: 100%;
-   position: relative;
-   display:grid;
-   grid-template-columns: repeat(5, auto);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-   margin:3px;
-  }
-
-  .carousel-item {
-    background-color: var(--puckly); 
-    color: #000; 
-    border-radius: 10px;
-    padding-left:25px;
-    padding-right:25px;
-    margin:3px;
-    text-align: center;
-    font-family:sans-serif;
-   }
-
-  .carrossel a {
-    text-decoration: none;
-    color: #000; 
-    background-color:var(--button);
-    /* background-image:url(); */
-    width:50px;
-  }
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <script>
+      const gap = 25;
+
+      const carousel = document.getElementById("carousel"),
+        content = document.getElementById("content"),
+        next = document.getElementById("next"),
+        prev = document.getElementById("prev");
+
+      next.addEventListener("click", e => {
+        carousel.scrollBy(width + gap, 0);
+        if (carousel.scrollWidth !== 0) {
+          prev.style.display = "flex";
+        }
+        if (content.scrollWidth - width - gap <= carousel.scrollLeft + width) {
+          next.style.display = "none";
+        }
+      });
+      prev.addEventListener("click", e => {
+        carousel.scrollBy(-(width + gap), 0);
+        if (carousel.scrollLeft - width - gap <= 0) {
+          prev.style.display = "none";
+        }
+        if (!content.scrollWidth - width - gap <= carousel.scrollLeft + width) {
+          next.style.display = "flex";
+        }
+      });
+
+      let width = carousel.offsetWidth;
+      window.addEventListener("resize", e => (width = carousel.offsetWidth));
+
+    </script>
+    <style>
+      :root {
+        --primary: #d5ddf5;
+        --secondary: #212c59;
+        --button: #6172aa;
+        --puckly: #ff80b3;
+
+      }
+      #wrapper {
+        width: 100%;
+        max-width: 1524px; 
+        position: relative;
+        left: 5%;
+      }
+
+      #carousel {
+        overflow: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+      }
+
+      #carousel::-webkit-scrollbar {
+        height: 0px;
+      }
+
+      #prev,
+      #next {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        background: white;
+        border: none;
+        padding: 8px;
+        border-radius: 50%;
+        outline: 0;
+        cursor: pointer;
+        position: absolute;
+      }
+
+      #prev {
+        top: 50%;
+        left: -50px;
+        transform: translate(50%, -50%);
+        display: none;
+      }
+
+      #next {
+        top: 50%;
+        right:-50px;
+        transform: translate(-50%, -50%);
+      }
+
+      #content {
+        width: 80%;
+        display: grid;
+        grid-gap: 8px;
+        grid-auto-flow: column;
+        margin:40px ;
+        margin-top:0px;
+        box-sizing: border-box;
+        text-align:center
+        justify-content:center;
+        align-items:center;
+      }
+      .item {
+        width: 180px;
+        min-height: 180px;
+        background: rgb(0, 0, 0);
+        justify-content:center;
+        align-items:center;
+      }
+
+      .carousel-item {
+        white-space: nowrap;
+        /* background-color: var(--puckly);  */
+        color: #000; 
+        border-radius:5px;
+        padding-left:30px;
+        padding-right:30px;
+        font-family:sans-serif;
+        justify-content:center;
+        align-items:center;
+        background-color: #272c52E8;
+        box-shadow:0 0 4px  #231b52;
+       }
+      
+      .carousel-item: hover {
+        color: white;
+      }
+      
+
+      .carrossel a {
+        text-decoration: none;
+        color: #000; 
+        background-color:var(--button);
+        width:100px;
+        justify-content:center;
+        align-items:center;
+      }
+    </style>
+</body>
+</html>
 

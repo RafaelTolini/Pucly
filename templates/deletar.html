@@ -1,149 +1,150 @@
 <!-- PÁGINA DE CONFIRMAÇÃO PARA DELETAR POSTAGEM -->
 {% load static %}
-<div class='divGigante'>
-</br>
-<h1 class='titulo'>Confirmação</h1>
-</br></br>
-      <div class="container">
-        <form method='POST' action=''>{% csrf_token %}
-          <p class='frase'>Deseja mesmo apagar "{{postagem}}"?</p>
-          </br></br></br>
-          <a href="{{request.META.HTTP_REFERER}}">
-          <button type="button"> Cancelar</button>
-          </a>
-          <button type="submit" value="Apagar">Apagar</button>
-        </form>
+
+<!-- <div class="black-background"> -->
+<div id="modal-delete" class="modal-containerdelete">
+      <div class="modaldelete">
+          <div>
+          </br>
+          <h1 class='tituloft'>Confirmação</h1>
+          </br></br>
+                <div class="containerft">
+                    <p class='fraseft' id="postagem"></p>
+                    </br></br></br>
+                    <button class="butaocancelar" type="button" id="fechar"> Cancelar</button>
+                    <button onclick="Delete()" class="butaoft" type="submit" value="Apagar">Apagar</button>
+                </div>
+          </div>
       </div>
-</div>
+  </div>
+<!-- </div> -->
 
- {% include 'footer.html' %}
-
-<!-- <script>
-  function DeleteModal(){
-    const modal = document.getElementById('modal-delete')
-    modal.classList.add('mostrar')
-
-    modal.addEventListener('click', (e) =>{
-        if (e.target.id == 'modal-delete' || e.target.id == "fechar"){
-            modal.classList.remove('mostrar')
-            localStorage.fechaModal = 'modal-delete'
-        }
-    })
-}
-</script>
-
-
-<div id="modal-delete" class="modal-container">
-<div class="modal">
-    <button class="fechar" id="fechar">X</button>
-    <h1>Confirmação</h1>
-      <form method='POST' action=''>{% csrf_token %}
-        <p>Deseja mesmo apagar "{{postagem}}"?</p>
-        <a href="{{request.META.HTTP_REFERER}}">Cancelar</a>
-        <input type="submit" value="Apagar">
-      </form>
-</div> -->
-
-  
-<style>
-
-  body{
-    background-image: linear-gradient(45deg, rgba(255, 128, 179, 0.7) 0%, rgba(33, 44,89,0.9)100%), url("../static/images/fundo1.jpg");
-    font-family: sans-serif;
+  <script>
+    var forumIdnovo;
+      
+    function Delete(){
+      const url = `/deletar-forum/${forumIdnovo}`;
+      window.location.href=url;
+    }
+    
+    function openDelete(forumId,postagem){
+      const modal = document.getElementById('modal-delete');
+      modal.classList.add('mostrar');
+      forumIdnovo=forumId;
+      
+      modal.addEventListener('click', (e) =>{
+          if (e.target.id == 'modal-delete' || e.target.id == "fechar"){
+              modal.classList.remove('mostrar');
+              localStorage.fechaModal = 'modal-delete';
+          }
+      })
+      document.getElementById('postagem').innerText = `Deseja mesmo apagar "${postagem}"?`;
   }
+    
 
-  .divGigante{
-    background-color: #212c59;
-    border-radius:20px;
-    width:50%;
-    height:50%;
-    position: absolute;
-    left:25%;
-    top: 25%;
-  }
-  
-  .titulo{
-    text-align: center;
-    color: white;
-  }
+  </script>
 
-  .container{
-    text-align: center;
-    color:white;
-  }
 
-  .frase{
-    font-size:20px;
-  }
 
-  button{
-    width: 170px;
-    height: 50px;
-    padding: 5px 20px;
-    font-size: 16px;
-    border: 0px solid #deebff;
-    border-radius: 50px;
-    font-family:sans-serif; 
-    background-color: #ff80b3;
-    text-align:center;
-    color:white;
+  <style>
 
-  }
-
-  button:hover{
-    background-color: #FFB6C1;
-    cursor: pointer;
-  }
-
-    /* .modal{
-        width: 60%;
-        min-width:400px;
-        min-height: 200px;
-        background-color: var(--primary);
-        backdrop-filter: blur(10px);
-        padding: 50px;
-        border-radius: 10px;
+    .black-background{
+      width:100%;
+      height:100%;
+      background-color:#000000;
+      display: none;
     }
 
-    .fechar{
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        border: none;
-        background-color: #b61b1b;
-        color: #fff;
-        font-weight: 700;
-        font-size: 15pt;
-        cursor: pointer;
+    .modal-containerdelete{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        display: none;
+        background-color: #000000A0;
+        font-family:sans-serif;
+    }
+
+    .modaldelete{
+        width: 50%;
+        min-width:400px;
+        min-height: 200px;
+        padding: 50px;
+        background-color: #272c52FA;
+        border-radius: 15px;
+        border: 3px solid #ff80b3;
     }
 
     .modal h1{
         margin-bottom: 20px;
-        color:var(--puckly)
     }
 
-    @keyframes animate-modal {
-        from{
-            opacity: 0;
-            transform: translate3d(0, -20px, 0);
-        }
-
-        to{
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
-    }
-
-    .modal-container.mostrar{
+    .modal-containerdelete.mostrar{
         display: flex;
     }
 
-    .mostrar .modal{
-        animation: animate-modal .3s;
-    } */
+    .tituloft{
+      text-align: center;
+      color: white;
+      font-size:40px;
+    }
+
+    .containerft{
+      text-align: center;
+      color:white;
+    }
+
+    .fraseft{
+      font-size:20px;
+    }
+
+    .butaoft{
+        width: 170px;
+        height: 50px;
+        padding: 5px 20px;
+        font-size: 17px;
+        border: 0px solid #deebff;
+        border-radius: 50px;
+        font-family:sans-serif; 
+        background-color: #ff80b3;
+        text-align:center;
+        color:white;
+        border: 2px #fff solid;
+
+      }
+
+      .butaoft:hover{
+        background-color: #FFB6C1;
+        cursor: pointer;
+      }
+
+      .butaocancelar{
+        border-radius: 50px;
+        transition: 0.25s ease-in-out;
+        cursor: pointer;  
+        background-color: #272c52E8;
+        color:#ff80b3;
+        font-family:sans-serif;
+        text-decoration:none;
+        width: 170px;
+        height: 50px;
+        padding: 5px 20px;
+        font-size: 17px;
+        box-sizing: border-box;
+        border: 2px #ff80b3 solid;
+        margin-right:10px;
+
+      }
+
+      .butaocancelar:hover{
+        color:white;
+        cursor: pointer;
+      }
+    
 
 </style>
 

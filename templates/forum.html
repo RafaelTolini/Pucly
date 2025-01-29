@@ -6,200 +6,158 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'style/style.css' %}"/>
     <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <link rel="stylesheet" href="{% static 'style/fundo.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/text.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/images.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/buttons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/reset.css' %}"/>
     <title>PUCLY</title>
     {{ form.media }}  
 </head>
 
   
-<body>
-  {%include 'navbar.html'%}
+<body class="default-body">
   
-  <div class="page-container">
-  <div class="caixa_forum">
-  <div id='duvidas'>
-
-    <div style="display:flex;align-items: center">
-
-    {%if not forum.anonimo%}
-    <a href="{%url 'profile' forum.host.id%}">
-    <img  class="forum-imagem" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
-    </a>
-      
-    <div style="margin-left:15px;">
-    <a href="{%url 'profile' forum.host.id%}" style="text-decoration:none;"><h1 class="forum-host">{{forum.host}}</h1></a>
-    {%else%}
-    <img  class="forum-imagem" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
-      
-    <div style="margin-left:15px;">
-    <h1 class="forum-host">Anônimo</h1>
-    {%endif%}
-      
-    {% for tag in tags %}
-    <small style="color:#ff80b3;">{{tag}}</small>
-    {% endfor %}
-    <small style="color:#fff;">  |  </small>
-    <small style="color:#ff80b3;">há {{forum.created|timesince_pt}}</small>
-    </div>
-      
-    </div>
-    
-
-    <h1 class='duvida' style="font-size: 50px;">{{forum.title}}</h1>
-    
-    
-    <div style="color:#fff">
-    <p class='descDúvida' style="font-size: 40px;">{{forum.text.html|safe}}</p>
-    </div>
-      
-    <a href="{% url 'resposta' forum.id %}" style="text-decoration:none;">
-    <button class='bntCriarResposta'>
-    <strong>
-    <span style="color:#000;font-size: 25px;vertical-align: middle;margin-right: 5px;">+ </span> 
-    Responder
-    </strong>
-    </button>
-    </a>
-      
-    <hr>
-  </div>
+{%include 'navbar.html'%}
   
-  <!-- RESPOSTAS -->
-  <div>
-    {% for answer in answers %}
-    <div class='respostas'>
-    <a class='nomePerfil' href="{%url 'profile' answer.sender.id%}"><h3 style="font-size: 30px;">@{{answer.sender}}</h3></a>
-    <small>há {{answer.created|timesince_pt}}</small>
-    {%if not forum.melhor_resposta and request.user == forum.host%}
-    <a href="{%url 'melhor-resposta' forum.id answer.id%}"><small>Melhor Resposta</small></a>
-    {%endif%}
-    {%if answer.melhor_resposta%}
-    <small style="color:#ff80b3">Melhor Resposta!</small>
-    {%endif%}
-    <p style="font-size: 20px;">{{answer.text.html|safe}}</p>
-    <hr>
-    </div>
-  </br>
-    {% endfor %}
-  </div>
-  <!-- Ainda fazer: Limitar qnt de respostas, não permitir marcar própria resposta como melhor, dar pontos por melhor resposta -->
+<div class="duvida-container">
 
-  </div>
+  <div></div>
+
+  <div> 
+    <div class="caixa-azul caixa-duvida">
+      <div id='duvidas'>
+
+      <!-- DUVIDA   -->
+      <div class="flex-align">
   
-  {% include 'footer.html' %}
+      {%if not forum.anonimo%}
+      <a href="{%url 'profile' forum.host.id%}">
+      <img  class="ppimage duvida-pp" src="{{forum.host.profile.profile_picture.url}}" alt="profile picture">
+      </a>
+        
+      <div style="margin-left:15px;">
+      <a href="{%url 'profile' forum.host.id%}" class="whitelink"><h1 class="whitetext size-20 reset-m">{{forum.host}}</h1></a>
+      {%else%}
+      <img  class="ppimage duvida-pp" src="{% static 'images/anonimopp.png' %}" alt="profile picture">
+        
+      <div style="margin-left:15px;">
+      <h1 class="whitetext size-20 reset-m nocursor">Anônimo</h1>
+      {%endif%}
+        
+      {% for tag in tags %}
+      <a href="{%url 'home'%}?q={{tag}}" class="pinklink">
+      <small>{{tag}}</small>
+      </a>
+      {% endfor %}
+      <small class="whitetext">  |  </small>
+      <small class="nocursor pinktext">há {{forum.created|timesince_pt}}</small>
+      </div>
+        
+      </div>
+      
+  
+      <h1 class='pinktext reset-m-b size-50'>{{forum.title}}</h1>
+      
+      
+      <div class="whitetext">
+      <p class='whitetext size-40'>{{forum.text.html|safe}}</p>
+      </div>
+        
+      <a href="{% url 'resposta' forum.id %}" class="nodecoration">
+      <button class='pink-main-button duvida-answer-button'>
+      <strong>
+      <span class="vertical-align-middle size-25" style="margin-right: 5px;">+ </span> 
+      Responder
+      </strong>
+      </button>
+      </a>
+      <hr>
+        <form action ="" method="POST">{% csrf_token %}
+        <div>
+          <div class="input-comment flex-align justify-center">
+            <a href="{%url 'profile' request.user.id%}">
+            <img class="ppimage comment-input-pp" src="{{request.user.profile.profile_picture.url}}" alt="profile picture">
+            </a>
+            <input placeholder="Peça detalhes ao usuário {{forum.host}}" type="text" name="text" maxlength="50" pattern="^((?!PQP).)*$" oninvalid="setCustomValidity('Você usou uma palavra considerada ofensiva')" class="max-width size-16 reset-b"/>
+          </div>
+          <div style="margin-top:8px;">
+          {% for comentario in forum.comentarioforum_set.all %}
+          <div class="flex-align" style="margin-bottom:5px;">
+          <a href="{%url 'profile' comentario.user.id%}" style="margin-right:10px;">
+          <img class="ppimage comment-pp" src="{{comentario.user.profile.profile_picture.url}}" alt="profile picture">
+          </a>
+          <p class="whitetext size-15 reset-m">{{comentario}}</p>
+          </div>
+          {% endfor %}
+        </div>
+        </div>
+        </form>
+        </div>
+        </br>
+      
+      </div> 
+      </br></br>
+      
+      <!-- RESPOSTAS -->
+      <div>
+      {% for answer in answers %}
+      <div class='caixa-azul caixa-resposta'>
+      <div class="flex-align">
+  
+
+      <a href="{%url 'profile' answer.sender.id%}">
+      <img  class="ppimage answer-pp duvida-pp" src="{{answer.sender.profile.profile_picture.url}}" alt="profile picture">
+      </a>
+        
+      <div style="margin-left:15px;">
+      <a href="{%url 'profile' answer.sender.id%}" class="blacklink"><h1 class="size-20 reset-m">{{answer.sender}}</h1></a>
+        
+
+      <small class="blacktext"><strong>{{answer.sender.answer_set.count}}</strong> perguntas respondidas</small>
+      <small class="pinktext">  |  </small>
+      <small class="blacktext" class="nocursor">há {{answer.created|timesince_pt}}</small>
+      </div>
+
+      {%if not forum.melhor_resposta and request.user == forum.host%}
+      <a href="{%url 'melhor-resposta' forum.id answer.id%}" id="melhor-resposta"><small>Melhor Resposta</small></a>
+      {%endif%}
+      {%if answer.melhor_resposta%}
+      <small class="pinktext">Melhor Resposta!</small>
+      {%endif%}
+        
+      </div>
+      <p class="size-20">{{answer.text.html|safe}}</p>
+      <hr class="better-hr answer-hr">
+        <form action="{%url 'answer-comments' answer.id%}" method="POST">{% csrf_token %}
+        <div>
+          <div class="input-comment flex-align justify-center">
+              <a href="{%url 'profile' request.user.id%}">
+              <img class="ppimage comment-input-pp" src="{{request.user.profile.profile_picture.url}}" alt="profile picture">
+              </a>
+              <input placeholder="Comente a resposta de {{answer.sender}}" type="text" name="text" maxlength="50" pattern="^((?!PQP).)*$" oninvalid="setCustomValidity('Você usou uma palavra considerada ofensiva')" style="border: 2px solid #8994ab;" class="max-width size-16"/>
+          </div>
+          <div style="margin-top:8px;">
+          {% for comentario in answer.comentarioanswer_set.all %}
+          <div class="flex-align" style="margin-bottom:5px;">
+          <a href="{%url 'profile' comentario.user.id%}" style="margin-right:10px;">
+          <img class="ppimage comment-pp" src="{{comentario.user.profile.profile_picture.url}}" alt="profile picture">
+          </a>
+          <p class="blacktext size-15 reset-m" style="">{{comentario}}</p>
+          </div>
+          {% endfor %}
+        </div>
+        </div>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+      
+    </div>
   </div>
+
+  <div></div>
+    
+</div>
 </body>
-  
-<!-- header fixo e rolagem-->
-<!--
-  <script>
-
-      $(window).scroll (function(){
-          if ($(this).scrollTop() > 1 ){
-              $('header').addClass("sticky");
-          }
-          else{
-              $('header').removeClass("sticky");
-          }
-      }
-  
-  </script>
--->
-
-<style>
-
-body{
-  background: #fff5ff;
-  margin-top:8%;
-}
-
-.page-container{
-  margin-left:0;
-}
-* {box-sizing: content-box;}
-
-.duvida{
-  color:#ff80b3;
-  margin-bottom:0;
-}
-.descDúvida{
-  font-family:sans-serif;
-  color:#fff;
-}
-  
-.respostas{
-  padding: 2%;
-  border-radius: 15px;
-  background-color: #fff;
-}
-
-.novaResposta{
-  border-radius: 25px;
-  font-size: 15px;
-  color: black;
-  height:50px;
-  width: 400px;
-}
-
-.nomePerfil{
-  font-family:sans-serif;
-  color: #212c59;
-  text-decoration:none;
-}
-
-.caixa_forum{
-    /* margin-top: 5rem; */
-    background-color: #272c52E8; /*cor caixa de login*/
-    padding: 45px;
-    padding-top: 45px;
-    border-radius:15px;
-    width: 1100px;
-    position: absolute;
-    top: 170px; left: 50%;
-    transform: translate(-50%,0%);
-    box-shadow:0 0 15px  #231b52;
-}
-
-.bntCriarResposta{
-  /* border-radius:5px;
-  background-color: #FFB6C1;
-  border:none; */
-  display: flex;
-  align-items: center;
-  width: 165px;
-  padding: 5px 20px;
-  font-size: 16px;
-  border: 0px solid #deebff;
-  border-radius: 50px;
-  font-family:sans-serif; 
-  background-color: #ff80b3;
-  text-align:center;
-  box-sizing: border-box;
-  margin-top:35px;
-  margin-bottom:10px;
-}
-
-.bntCriarResposta:hover {
-   background-color: #FFB6C1;
-    cursor: pointer;
-}
-
-.forum-imagem{
-    width: 45px;
-    height: 45px;
-    object-fit: cover;
-    border-radius: 50px;  
-    border: 4px solid #4e5880;
-}
-  
-.forum-host{
-  color: white;
-  font-size: 20px;
-  font-family: sans-serif;
-  margin:0;
-  margin-bottom:3px;
-  margin-top:7px;
-}
-  
-</style>

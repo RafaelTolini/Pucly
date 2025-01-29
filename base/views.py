@@ -3,12 +3,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth import authenticate, login, logout
-from .forms import ForumCreation, AnswerCreation, ProfilePictureUpdate
-from .models import ForumPost, Answer, Profile, Tag, Notification
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from .forms import ForumCreation, AnswerCreation, ProfilePictureUpdate, UserUpdateForm, ComentarioForumForm,ComentarioAnswerForm,ForumUpdate
+from .models import ForumPost, Answer, Profile, Tag, Notification, ComentarioForum, ComentarioAnswer
 import uuid
 from django.core.mail import send_mail
 from django.db.models import Q
+from django.contrib.auth.hashers import check_password
 
 
 # DECORATOR PÁGINAS QUE NÃO PODEM SER ACESSADAS POR USUÁRO LOGADO
@@ -113,7 +114,7 @@ def verifyToken(request, token):
 # MANDA EMAIL
 def sendEmail(email, token):
     assunto = "Sua conta PUCLY precisa ser verificada"
-    mensagem = f'Por favor, clique no link para verificar sua conta https://django--rafaeltolini.repl.co/verify/{token}'
+    mensagem = f'Por favor, clique no link para verificar sua conta http://127.0.0.1:8000/verify/{token}'
     send_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(assunto, mensagem, send_from, recipient_list)
@@ -129,7 +130,12 @@ def home(request):
 
     profiles = Profile.objects.order_by('-pontos')[:10]
     tags = Tag.objects.all()
-    context = {'forums': forums, 'profiles': profiles, 'tags': tags, 'range':range(20)}
+    context = {
+        'forums': forums,
+        'profiles': profiles,
+        'tags': tags,
+        'range': range(20)
+    }
     return render(request, 'home.html', context)
 
 
@@ -146,16 +152,39 @@ def forum(request, pk):
     answers = forum.answer_set.order_by('-melhor_resposta', '-created')
     tags = forum.tags.all()
 
-    context = {'forum': forum, 'tags': tags, 'answers': answers}
+    if request.method == 'POST':
+        form = ComentarioForumForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.forum = forum
+            comentario.user = request.user
+            comentario.save()
+        return redirect('forum', pk=pk)
+
+    context = {
+        'forum': forum,
+        'tags': tags,
+        'answers': answers,
+    }
     return render(request, 'forum.html', context)
+
+#COMENTÁRIOS RESPOSTAS
+def answer_comments(request, pk):
+    answer = Answer.objects.get(id=pk)
+    forum = answer.forum
+    if request.method == 'POST':
+        form = ComentarioAnswerForm(request.POST)
+        if form.is_valid():       
+            comentario = form.save(commit=False)
+            comentario.user = request.user
+            comentario.answer = answer
+            comentario.save()
+        return redirect('forum', pk=forum.id)
 
 
 # CRIADOR DE FORUM
 @login_required(login_url='login')
 def forumCreation(request):
-    form = ForumCreation()
-    tags = Tag.objects.all()
-
     if request.method == 'POST':
         form = ForumCreation(request.POST)
         if form.is_valid():
@@ -163,44 +192,42 @@ def forumCreation(request):
             tag = request.POST.get("tags")
             anonimo = request.POST.get("anonimo")
             forum.host = request.user
-            if anonimo == "true":
-              forum.anonimo = True
+            if anonimo == "on":
+                forum.anonimo = True
             else:
-              forum.anonimo = False
+                forum.anonimo = False
             forum.save()
             forum.tags.add(tag)
-            return redirect('home')
+            return redirect('forum', pk=forum.id)
 
-    context = {'form': form, 'tags': tags}
-    return render(request, 'forum-creation.html', context)
+    return redirect('home')
 
 
 # DELETAR POSTAGEM
 def deletarForum(request, pk):
     postagem = ForumPost.objects.get(id=pk)
-
-    if request.method == 'POST':
-        postagem.delete()
-        return redirect('home')
-
-    context = {'postagem': postagem}
-    return render(request, 'deletar.html', context)
+    postagem.delete()
+    return redirect('home')
 
 
 # EDITAR POSTAGEM
 def editarForum(request, pk):
     postagem = ForumPost.objects.get(id=pk)
-    form = ForumCreation(instance=postagem)
-    tags = Tag.objects.all()
 
     if request.method == 'POST':
-        form = ForumCreation(request.POST, instance=postagem)
+        form = ForumUpdate(request.POST, instance=postagem)
+        title = request.POST.get('title')
+        postagem.title = title
+        postagem.save()
         if form.is_valid():
-            form.save()
-            return redirect('home')
+          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
+          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
+          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
+          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
+          form.save()
+        return redirect('home')
 
-    context = {'form': form, 'tags': tags, 'editando':True}
-    return render(request, 'forum-creation.html', context)
+    return redirect('home')
 
 
 # PÁGINA DE RESPOSTA
@@ -219,11 +246,6 @@ def resposta(request, pk):
             profile = Profile.objects.get(user=request.user)
             profile.pontos += 5
             profile.save()
-
-            Notification.objects.create(receiver=forum.host,
-                                        sender=request.user,
-                                        forum=forum,
-                                        text="respondeu à sua dúvida em")
 
             receiver = Profile.objects.get(user=forum.host)
             receiver.unread_notifications = True
@@ -262,23 +284,12 @@ def profile(request, pk):
     profile = Profile.objects.get(user=usuario)
     melhores = Answer.objects.filter(sender=usuario,
                                      melhor_resposta=True).count()
-    form = ProfilePictureUpdate(instance=profile)
-
-    if request.method == 'POST':
-        form = ProfilePictureUpdate(request.POST,
-                                    request.FILES,
-                                    instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('profile', pk=pk)
-
     context = {
         'usuario': usuario,
         'forums': forums,
         'answers': answers,
         'profile': profile,
         'melhores': melhores,
-        'form': form
     }
     return render(request, 'profile.html', context)
 
@@ -295,17 +306,37 @@ def erroPagina(request):
     context = {}
     return render(request, 'erro.html', context)
 
+
 #TESTES
-#NOTIFICAÇÕES TESTE
-def noti(request):
-    pf = Profile.objects.get(user=request.user)
-    pf.unread_notifications = False
-    pf.save()
-    notifications = request.user.notification_set.all()
-    return render(request, 'not-teste.html', {'notifications': notifications})
 def ini2(request):
     return render(request, 'inicial.html')
-def carrossel_teste(request):
-    tags = Tag.objects.all()
-    context = {'tags': tags}
-    return render(request, 'carrossel-teste.html', context)
+
+
+def configuracoes(request):
+    user = User.objects.get(id=request.user.id)
+    profile = Profile.objects.get(user=user)
+    form_user = UserUpdateForm(instance=user)
+
+    if request.method == 'POST':
+        form_pp = ProfilePictureUpdate(request.POST,
+                                       request.FILES,
+                                       instance=profile)
+        form_user = UserUpdateForm(request.POST, instance=user)
+        if form_pp.is_valid() and form_user.is_valid():
+            old_password = request.POST.get('old_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            if check_password(old_password, user.password):
+              if new_password == confirm_password:
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Sua senha foi atualizada.')
+              else:
+                messages.error(request, "A confirmação de senha não confere.")
+            else:
+              messages.error(request, "Senha inválida.")
+            form_pp.save()
+            form_user.save()
+
+    return render(request, 'configuracoes.html', {'form_user': form_user})

@@ -4,7 +4,7 @@ from django_quill.fields import QuillField
 
 # Create your models here.
 
-
+    
 # TAG MODEL
 class Tag(models.Model):
     name = models.CharField(max_length=50)
@@ -64,6 +64,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+# NOTIFICATION MODEL
 class Notification(models.Model):
   receiver = models.ForeignKey(User, on_delete=models.CASCADE)
   forum = models.ForeignKey(ForumPost, on_delete=models.CASCADE, null=True)
@@ -71,9 +72,38 @@ class Notification(models.Model):
   text = models.CharField(max_length=200)
   is_read = models.BooleanField(default=False)
 
+  notification_image = models.ImageField(null=True, default="logo.png")
+
   created = models.DateTimeField(auto_now_add=True)
+
+  class Meta:
+        ordering = ['-created']
 
   def __str__(self):
         return self.text
+
+class ComentarioForum(models.Model):
+    forum = models.ForeignKey(ForumPost, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=200, blank=False)
   
+    created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created']
+    
+    def __str__(self):
+        return self.text
+
+class ComentarioAnswer(models.Model):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.CharField(max_length=200, blank=False)
   
+    created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created']
+    
+    def __str__(self):
+        return self.text

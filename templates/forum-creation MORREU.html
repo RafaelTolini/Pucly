@@ -1,0 +1,284 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'images/logo.png' %}"/>
+    <link rel="stylesheet" href="{% static 'style/fundo.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/text.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/images.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/buttons.css' %}"/>
+    <title>PUCLY</title>
+    {{ form.media }}  
+</head>
+
+  
+<body>
+  <a href="{%url 'home'%}">
+  <img  class="volta" src="{% static 'images/volta.png' %}" alt="logo site">
+  </a>
+  
+<div class="caixa_criacao">
+  
+<form action="" method="POST">{% csrf_token %}
+</br>
+  
+<div class="" style="display: flex;align-items:center;margin-bottom:80px;">
+  
+<input class='caixaTitulo' type="text" name="title"style="font-family:sans-serif;font-size:25px;" value="{{form.instance.title}}" placeholder=""/>
+
+</br></br></br>
+
+{%if not editando%}
+<select name="tags" id="id_tags" required>
+<option value="" selected disabled>Escolha uma matéria</option>
+{%for tag in tags%}
+<option value="{{tag.id}}">{{tag.name}}</option>
+{%endfor%}
+</select>
+
+  <section id="id_anonimo" required style="margin-left:20px;">
+    <div class="btn" id="switch">
+      <input type="checkbox" class="checkbox" name="anonimo"/>
+      <div class="pub"value="false" selected></div>
+      <div class="ano" value="true"></div>
+    </div>
+</section>
+<!-- <select name="anonimo" id="id_anonimo" required style="margin-left:20px;">
+<option value="false" selected>Público</option>
+<option value="true">Anônimo</option>
+</select> -->
+{%endif%}
+
+</div>
+{{form.text}}
+
+<div id="editor"></div>
+
+<div class='criar'>
+{%if not editando%}
+<input class='bntCriar' id="Criar" type="submit" value="Enviar Dúvida"/>
+{%else%}
+<input class='bntCriar' id="Criar" type="submit" value="Salvar Mudanças"/>
+{%endif%}
+</div>
+
+</form>
+</div>
+ 
+</body>
+
+  
+<style>
+:root{
+  --primary: #d5ddf5;
+  --secondary: #212c59;
+  --button: #6172aa;
+  --puckly: #ff80b3;
+  
+}
+body{
+  /* background:#fff5ff; */
+  /* margin:30px; */
+}
+  .volta{
+    width:30px;
+    margin:30px;
+  }
+  
+.caixa_criacao{
+    margin-top: 5rem; /* 15 */
+    background-color: #272c52E8; /*cor caixa de login*/
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 45px;
+    padding-top: 55px;
+    border-radius:15px;
+    width: 1200px;
+    /* height: 500px; */
+    position: absolute;
+    top: 42%; left: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow:0 0 15px  #231b52;
+}
+  
+.barra{
+  background-color: #212c59;
+  color: white;
+  font-size: 20px;
+  font-family: sans-serif;
+  text-align:center;
+}
+
+.caixaTitulo{
+  border: none;
+  border-radius: 15px;
+  height: 50px;
+  width: 500px;
+  /* margin-bottom:30px; */
+  margin-right:200px;
+  padding-left:20px;
+  background-color: #e0e9f0;
+}
+
+.caixaText{
+  border: none;
+  border-radius: 15px;
+  height: 30%;
+  width: 60%;
+}
+
+.input{
+  text-align:center;
+  margin: 5%;
+}
+
+.bntCriar{
+  text-align:center;
+  height: 7%;
+  width: 14%;
+  font-size: 25px;
+  border-radius: 50px;
+  border: 2px #ff80b3 solid;
+  transition: 0.25s ease-in-out;
+  cursor: pointer; 
+  background-color: #272c52E8;
+  color:#ff80b3;
+  font-family:sans-serif;
+}
+.bntCriar:hover{
+  color:white;
+    cursor: pointer;
+}
+
+.criar{
+  text-align:center;
+}
+
+.input_title{
+  font-family:sans-serif;
+  color:#ff80b3;
+  margin-top:40px;
+}
+  
+#id_tags{
+  appearance: none;
+  font-family:sans-serif;
+  font-size:16px;
+  height:46px;
+  padding:0 35px 0 15px;
+  background-color:#e0e9f0;
+  border-radius:20px;
+  border:0px #e0e9f0 solid;
+}
+#id_title{
+  background-color:var(--puckly);
+}
+#quill-id_text{
+  background-color:white;
+  /* border: 05px solid black;
+  width:70%;
+  margin:20px */
+  height:300px;
+  margin-bottom:30px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border: 10px solid #e0e9f0;
+  border-top: 0px solid #e0e9f0;
+}
+.ql-toolbar.ql-snow {
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  padding: 8px;
+  border: 10px solid #e0e9f0;
+  background-color:#e0e9f0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+#Criar{
+    font-family: sans-serif;
+    width: 220px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px;
+    outline: none;
+    text-align:center;
+    border-radius: 50px;
+    border: 2px #ff80b3 solid;
+    transition: 0.25s ease-in-out;
+    cursor: pointer;  
+    background-color: #272c52E8;
+    color:#ff80b3;
+}
+#Criar:hover {
+   color:white;
+    cursor: pointer;
+}
+  .btn {
+    position: relative;
+    top: 50%;
+    width: 100px;
+    height: 46px;
+    /* margin: -20px auto 0 auto; */
+    overflow: hidden;
+    background-color:#e0e9f0;
+  }
+  .btn,
+  .btn .ano {
+    border-radius: 100px;
+  }
+  .checkbox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 3;
+  }
+  .pub {
+    z-index: 2;
+  }
+  .ano {
+    width: 100%;
+    background-color: #ebf7fc;
+    transition: 0.3s ease all;
+    z-index: 1;
+  }
+
+  #switch .pub:before {
+    content:"";
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    width: 30px;
+    height: 20px;
+    color: #fff;
+    font-size: 25px;
+    font-weight: bold;
+    text-align:center;
+    background-image:url("{{request.user.profile.profile_picture.url}}");
+    background-size:cover;
+    line-height: 1;
+    padding: 9px 4px;
+    border-radius: 50%;
+    transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+  }
+  #switch .checkbox:checked + .pub:before {
+    content:"";
+    left: 56px;
+    background-image:url("{% static 'images/anonimopp.png' %}");
+    background-size:cover;
+  }
+  #switch .checkbox:checked ~ .ano {
+    background-color: #fcebeb;
+  }
+  #switch .pub,
+  #switch .pub:before,
+  #switch .ano {
+    transition: 0.3s ease all;
+  }
+</style>
