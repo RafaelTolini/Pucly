@@ -58,5 +58,5 @@ Finalmente, para iniciar o projeto, execute:
 python manage.py runserver
 ```
 
-O acesso ao site estará disponível na porta padrão: http://127.0.0.1:8000/ .
+O acesso ao site estará disponível em seu navegador na porta padrão: http://127.0.0.1:8000/ .
 
