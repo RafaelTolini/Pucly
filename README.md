@@ -16,11 +16,11 @@ Não esqueça de baixar a versão mais recente do Python se não tiver. Apos a c
 
 No Windows:
 ```bash
-.\.venv\Scripts\activate
+venv\Scripts\activate
 ```
 No macOS/Linux:
 ```bash
-source .venv/bin/activate
+source venv/bin/activate
 ```
 Para desativar a venv basta usar o comando:
 ```bash
