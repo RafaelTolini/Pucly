@@ -12,7 +12,7 @@ python -m venv venv
 
 Não esqueça de baixar a versão mais recente do Python se não tiver. Apos a criação da venv será possivel ativa-la.
 
-## Ativando a venv:
+## Ativando a venv
 
 No Windows:
 ```bash
@@ -29,7 +29,7 @@ deactivate
 
 A utilização de uma venv é aconselhável para isolar as dependências do projeto, evitando conflitos entre diferentes projetos e facilitando a distribuição.
 
-## Instale o gerenciador de pacotes Poetry:
+## Instale o gerenciador de pacotes Poetry
 
 ```bash
 pip install poetry
