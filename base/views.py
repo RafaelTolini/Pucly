@@ -220,10 +220,6 @@ def editarForum(request, pk):
         postagem.title = title
         postagem.save()
         if form.is_valid():
-          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
-          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
-          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
-          print("AAAAAAAAAAAAAAAAAAAAAAAAA")
           form.save()
         return redirect('home')
 
